@@ -37,23 +37,23 @@ let minsByRows = minFromRows(precedenceMatrix);
 console.log('Мінімальні по рядкам:', minsByRows.join(' '));
 
 // Віднімання мінімумів по рядках
-function subEveryRow(matrix, minBorder) {
-  const mins = minFromRows(matrix);
-  minBorder += mins.reduce((acc, curr) => acc + curr, 0);
+// function subEveryRow(matrix, minBorder) {
+//   const mins = minFromRows(matrix);
+//   minBorder += mins.reduce((acc, curr) => acc + curr, 0);
 
-  const newMatrix = matrix.map((row, i) =>
-    row.map((value, j) => value - mins[i])
-  );
+//   const newMatrix = matrix.map((row, i) =>
+//     row.map((value, j) => value - mins[i])
+//   );
 
-  return { matrix: newMatrix, minBorder };
-}
+//   return { matrix: newMatrix, minBorder };
+// }
 
-let { matrix: newMatrixRows, minBorder: newMinBorderRows } = subEveryRow(
-  precedenceMatrix,
-  0
-);
-console.log('Матриця після віднімання мінімумів по рядках:', newMatrixRows);
-console.log('Нова мінімальна границя:', newMinBorderRows);
+// let { matrix: newMatrixRows, minBorder: newMinBorderRows } = subEveryRow(
+//   precedenceMatrix,
+//   0
+// );
+// console.log('Матриця після віднімання мінімумів по рядках:', newMatrixRows);
+// console.log('Нова мінімальна границя:', newMinBorderRows);
 
 // Знаходження мінімальних елементів по стовпцях
 function minFromColumns(matrix) {
@@ -214,56 +214,99 @@ let modifiedMatrix = replaceRowAndColumnWithInfinity(
 );
 console.log('Матриця після заміни на Infinity:', modifiedMatrix);
 
-function doOperations(modifiedMatrix, minBorder) {
-  console.log(subEveryRow(modifiedMatrix, minBorder));
-  console.log(subEveryColumn(modifiedMatrix, minBorder));
-}
+// function doOperations(modifiedMatrix, minBorder) {
+//   console.log(subEveryRow(modifiedMatrix, minBorder));
+//   console.log(subEveryColumn(modifiedMatrix, minBorder));
+// }
 
-doOperations(modifiedMatrix, newMinBorderCols);
+// doOperations(modifiedMatrix, newMinBorderCols);
 
-//// НЕГАМІЛЬТОНОВІ ЦИКЛИ
 /**
  * Предотвращение негамильтоновых контуров (циклов)
- * изменяет path
- * @param {number[][]} table
- * @param {number[]} path
- * @return {number[][]}
+ * Изменяет path
+ * @param {number[][]} matrix - Вхідна матриця
+ * @param {number[][]} path - Матриця шляхів
+ * @return {number[][]} - Матриця зі зміненими значеннями
  */
-function preventCycle(table, path) {
-  console.log('Поиск циклов');
-  let paths = path.slice();
-  let pathCopy = path.slice();
-
-  for (let row = 0; row < paths.length; row++) {
+function preventCycle(matrix, path) {
+  // console.log('Поиск циклов');
+  let paths = path;
+  let pathCopy = [...path];
+  for (let row in paths) {
     let column = paths[row];
-
-    if (table[column][row] !== undefined) {
-      table[column][row] = Infinity;
+    if (matrix[column][row] !== undefined) {
+      matrix[column][row] = Infinity;
     }
-
-    for (let rowCopy = 0; rowCopy < pathCopy.length; rowCopy++) {
+    for (let rowCopy in pathCopy) {
       let columnCopy = pathCopy[rowCopy];
-
       if (row === columnCopy) {
         paths[rowCopy] = column;
-        paths.splice(row, 1);
-
-        if (table[rowCopy][column] !== undefined) {
-          table[rowCopy][column] = Infinity;
+        delete paths[row];
+        if (matrix[rowCopy][column] !== undefined) {
+          matrix[rowCopy][column] = Infinity;
         }
-        if (table[column][rowCopy] !== undefined) {
-          table[column][rowCopy] = Infinity;
+        if (matrix[column][rowCopy] !== undefined) {
+          matrix[column][rowCopy] = Infinity;
         }
-
-        console.log('Цикл найден. Уничтожен [' + rowCopy + '][' + column + ']');
-        return preventCycle(table, paths);
+        console.log(`Цикл найден. уничтожен [${rowCopy}][${column}]`);
+        return preventCycle(matrix, paths);
       }
     }
   }
-
   console.log('Цикл не найден');
-  return table;
+  return matrix;
 }
+
+let path = {
+  4: 5,
+};
+
+let resultMatrix = preventCycle(modifiedMatrix, path);
+console.log('Матриця після уникнення циклів:', resultMatrix);
+
+// //// НЕГАМІЛЬТОНОВІ ЦИКЛИ
+// /**
+//  * Предотвращение негамильтоновых контуров (циклов)
+//  * изменяет path
+//  * @param {number[][]} table
+//  * @param {number[]} path
+//  * @return {number[][]}
+//  */
+// function preventCycle(table, path) {
+//   console.log('Поиск циклов');
+//   let paths = path.slice();
+//   let pathCopy = path.slice();
+
+//   for (let row = 0; row < paths.length; row++) {
+//     let column = paths[row];
+
+//     if (table[column][row] !== undefined) {
+//       table[column][row] = Infinity;
+//     }
+
+//     for (let rowCopy = 0; rowCopy < pathCopy.length; rowCopy++) {
+//       let columnCopy = pathCopy[rowCopy];
+
+//       if (row === columnCopy) {
+//         paths[rowCopy] = column;
+//         paths.splice(row, 1);
+
+//         if (table[rowCopy][column] !== undefined) {
+//           table[rowCopy][column] = Infinity;
+//         }
+//         if (table[column][rowCopy] !== undefined) {
+//           table[column][rowCopy] = Infinity;
+//         }
+
+//         console.log('Цикл найден. Уничтожен [' + rowCopy + '][' + column + ']');
+//         return preventCycle(table, paths);
+//       }
+//     }
+//   }
+
+//   console.log('Цикл не найден');
+//   return table;
+// }
 
 //============ELSE ELSE ELSE==========================
 /**
