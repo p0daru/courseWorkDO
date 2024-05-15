@@ -7,6 +7,7 @@ export function replaceRowAndColumnWithInfinity(matrix, row, column) {
   // row - 1 -> оскільки беремо індекс, а не порядковий номер (maxPenalty.row = maxPenalty.index+1)
 }
 
+// Заборона негамільтонових циклів
 export function preventCycles(matrix, edges) {
   for (const [start, end] of edges) {
     // Заборонити перехід між симетричними координатами

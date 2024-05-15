@@ -39,3 +39,17 @@ export function subEveryColumn(matrix, newMinBorderCols) {
 
   return { matrix: newMatrix, newMinBorderCols };
 }
+
+// Сума констант зведення
+export function sumOfReducedElements(minsByCols, minsByRows) {
+  let totalSum = 0;
+  for (let i = 0; i < minsByCols.length; i += 1) {
+    totalSum += minsByCols[i];
+  }
+
+  for (let i = 0; i < minsByRows.length; i += 1) {
+    totalSum += minsByRows[i];
+  }
+
+  return totalSum;
+}
