@@ -21,6 +21,28 @@ let precedenceMatrix = [
 ];
 console.table(precedenceMatrix);
 
+// Чи розмірність матриці 2х2
+// function isSizeTwoByTwo(precedenceMatrix) {
+//   let numOfInfinity = 0;
+//   let numOfValues = 0;
+
+//   for (let i = 0; i < precedenceMatrix.length; i += 1) {
+//     for (let j = 0; j < precedenceMatrix.length; j += 1) {
+//       if (precedenceMatrix[i][j] !== Infinity) {
+//         numOfValues += 1;
+//       }
+//     }
+//   }
+
+//   if (numOfValues === 4) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// }
+
+// console.log(isSizeTwoByTwo(precedenceMatrix));
+
 ///// ЕТАП-1. ЗВЕДЕННЯ МАТРИЦІ
 console.log('ЕТАП-1. ЗВЕДЕННЯ МАТРИЦІ');
 // Знаходження мінімальних елементів по стовпцях
