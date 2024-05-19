@@ -1,4 +1,4 @@
-// Об`єкт функцій
+// Об`єкт функцій для генерації вхідних даних
 const taskGenerator = {
   /**
    * Генерує матрицю передування для заданої кількості студентів.
@@ -6,21 +6,10 @@ const taskGenerator = {
    * @param {number} tau - Значення математичного сподівання.
    * @param {number} deltaTau - Значення напівінтервалу ∆τ.
    * @returns {number[][]} - Матриця передування.
-   * @throws {Error} - Якщо неправильні вхідні дані.
    */
   generateMatrix: function (numOfStudents, tau, deltaTau) {
     // Перевірка вхідних даних
-    if (
-      !Number.isInteger(numOfStudents) ||
-      numOfStudents <= 0 ||
-      numOfStudents % 2 !== 0 || // к-сть учнів - парне число
-      tau < 0 ||
-      deltaTau < 0
-    ) {
-      throw new Error(
-        'Неправильні вхідні дані! Очікується ціле додатнє число numOfStudents додатне і парне , tau >= 0 та deltaTau >= 0.'
-      );
-    }
+    validateInputs(numOfStudents, tau, deltaTau, true);
 
     // Верхня та нижня границі для генерації випадкових значень
     const minVal = tau - deltaTau;
@@ -45,22 +34,71 @@ const taskGenerator = {
   },
 
   /**
-   * Генерує тривалість зайнять.
+   * Генерує тривалість занять для заданої кількості студентів.
+   * @param {number} numOfStudents - Кількість студентів.
+   * @returns {number[]} - Массив з тривалостями занять.
    */
   generateLessonDuration: function (numOfStudents) {
-    let times = [];
-    for (let i = 0; i < numOfStudents; i += 1) {
-      times.push(Math.floor(Math.random() * (120 - 45 + 1)) + 45);
-    }
+    // Перевірка вхідних даних
+    validateInputs(numOfStudents);
+
+    // Генерація тривалостей занять у діапазоні від 45 до 120 хвилин
+    const times = Array.from(
+      { length: numOfStudents },
+      () => Math.floor(Math.random() * (120 - 45 + 1)) + 45
+    );
+
     return times;
   },
 };
 
+/**
+ * Перевірка вхідних даних.
+ * @param {number} numOfStudents - Кількість студентів.
+ * @param {number} [tau] - Значення математичного сподівання.
+ * @param {number} [deltaTau] - Значення напівінтервалу ∆τ.
+ * @param {boolean} [checkTauDeltaTau=false] - Флаг для перевірки tau та deltaTau.
+ * @throws {Error} - Якщо неправильні вхідні дані.
+ */
+function validateInputs(
+  numOfStudents,
+  tau,
+  deltaTau,
+  checkTauDeltaTau = false
+) {
+  if (
+    !Number.isInteger(numOfStudents) ||
+    numOfStudents <= 0 ||
+    numOfStudents % 2 !== 0 // Кількість студентів повинна бути парною
+  ) {
+    throw new Error(
+      'Неправильні вхідні дані! Очікується ціле додатнє парне число для numOfStudents.'
+    );
+  }
+
+  if (checkTauDeltaTau) {
+    if (tau < 0 || deltaTau < 0) {
+      throw new Error(
+        'Неправильні вхідні дані! Очікуються не від’ємні значення для tau і deltaTau.'
+      );
+    }
+  }
+}
+
+// Приклад використання
+// try {
+//   const matrix = taskGenerator.generateMatrix(4, 50, 10);
+//   console.log('Матриця передування:', matrix);
+
+//   const lessonDurations = taskGenerator.generateLessonDuration(4);
+//   console.log('Тривалості занять:', lessonDurations);
+// } catch (error) {
+//   console.error(error.message);
+// }
+
 // Експорт функцій
 export const generateMatrix = taskGenerator.generateMatrix;
 export const generateLessonDuration = taskGenerator.generateLessonDuration;
-
-// export const testMethod = taskGenerator.testMethod;
 
 //===== Test case 2 ====//
 // export function generateMatrix(numOfStudents, tau, deltaTau) {
@@ -85,21 +123,3 @@ export const generateLessonDuration = taskGenerator.generateLessonDuration;
 
 //   return matrix;
 // }
-
-// let numOfStudents = 5; // Кількість учнів
-// let tau = 5; // Значення математичного сподівання
-// let deltaTau = 2; // Значення напівінтервалу ∆τ
-// let matrix = generateMatrix(numOfStudents, tau, deltaTau);
-// console.table(matrix);
-
-/// Матриця з прикладу курсової
-// let precedenceMatrix = [
-//   [NaN, 15, NaN, 20, NaN, 5, NaN, 10],
-//   [5, NaN, 15, NaN, 5, NaN, 10, NaN],
-//   [NaN, 20, NaN, 15, NaN, 5, NaN, 5],
-//   [10, NaN, 20, NaN, 5, NaN, 10, NaN],
-//   [NaN, 15, NaN, 15, NaN, 5, NaN, 5],
-//   [10, NaN, 15, NaN, 10, NaN, 10, NaN],
-//   [NaN, 20, NaN, 20, NaN, 10, NaN, 5],
-//   [5, NaN, 15, NaN, 5, NaN, 5, NaN],
-// ];

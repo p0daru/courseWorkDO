@@ -1,57 +1,81 @@
-// Pohorila Dariia
 import * as Generator from '../../generator/taskGenerator.js';
 import * as bnb from './branchesAndBounds.js';
 import * as calcShowResults from './calcShowResults.js';
 
-// Результати роботи МГтМ
-export function resultsBnB(numOfStudents, tau, deltaTau) {
-  // Перевірка вхідних даних
-  if (
-    !Number.isInteger(numOfStudents) ||
-    numOfStudents <= 0 ||
-    numOfStudents % 2 !== 0 || // к-сть учнів - парне число
-    tau < 0 ||
-    deltaTau < 0
-  ) {
-    throw new Error(
-      'Неправильні вхідні дані! Очікується ціле додатнє число numOfStudents додатне і парне , tau >= 0 та deltaTau >= 0.'
-    );
-  }
+//////// РОЗВ`ЯЗОК ЗАДАЧІ МГтМ ТА ВИВЕДЕННЯ РЕЗУЛЬТАТІВ РОБОТИ АЛГОРИТМУ
 
-  console.log('ГЕНЕРАЦІЯ ІНДИВІДУАЛЬНОЇ ЗАДАЧІ...\n');
-  console.log('1.ТРИВАЛІСТЬ ЗАЙНЯТЬ');
-  const trainingDuration = Generator.generateLessonDuration(numOfStudents);
-  console.table(trainingDuration);
-
-  console.log('2.МАТРИЦЯ ПЕРЕНАЛАШТУВАНЬ');
-  const matrix = Generator.generateMatrix(numOfStudents, tau, deltaTau);
-  console.table(matrix);
-
-  console.log('\nПОШУК РОЗВ`ЯЗКУ МГтМ...');
-  console.log('\nВузли');
+/**
+ * Обчислює результати для заданих параметрів.
+ * @param {number} numOfStudents - Кількість студентів.
+ * @param {number} tau - Значення математичного сподівання.
+ * @param {number} deltaTau - Значення напівінтервалу ∆τ.
+ * @returns {Object} - Об'єкт з результатами.
+ */
+export function getResults(matrix, trainingDuration) {
+  // Виконання алгоритму гілок та границь
   let { minCostArray, lastCost } = bnb.branchAndBound(matrix);
-  console.log(minCostArray);
 
-  console.log('\nРозклад:');
+  // Обчислення розкладу та часу роботи тренера
   let schedule = calcShowResults.printSchedule(minCostArray);
-  console.log(schedule);
-
-  console.log('\nСума переналаштувань:', lastCost, 'хв');
-
   let totalDuration = calcShowResults.sumOfDurations(trainingDuration);
-  console.log(`Тривалість уроків:`, totalDuration, 'хв');
-
   let totalWorkTime = calcShowResults.calcTrainerWorkTime(
     totalDuration,
     lastCost
   );
-  console.log('Час роботи тренера:', totalWorkTime, 'хв\n');
 
-  return { totalWorkTime, schedule };
+  // Повернення об'єкта з усіма результатами
+  return {
+    trainingDuration,
+    matrix,
+    minCostArray,
+    lastCost,
+    schedule,
+    totalDuration,
+    totalWorkTime,
+  };
 }
 
-const numOfStudents = 8;
-const tau = 100;
-const deltaTau = 10;
+/**
+ * Виводить результати на консоль для заданих параметрів.
+ * @param {number} numOfStudents - Кількість студентів.
+ * @param {number} tau - Значення математичного сподівання.
+ * @param {number} deltaTau - Значення напівінтервалу ∆τ.
+ */
+export function outputResultsBnB(matrix, trainingDuration) {
+  // Отримання результатів
+  const results = getResults(matrix, trainingDuration);
 
-resultsBnB(numOfStudents, tau, deltaTau);
+  // Виведення результатів на консоль
+  console.log('ГЕНЕРАЦІЯ ІНДИВІДУАЛЬНОЇ ЗАДАЧІ...\n');
+  console.log('1.ТРИВАЛІСТЬ ЗАЙНЯТЬ');
+  console.table(results.trainingDuration);
+
+  console.log('2.МАТРИЦЯ ПЕРЕНАЛАШТУВАНЬ');
+  console.table(results.matrix);
+
+  console.log('\nПОШУК РОЗВ`ЯЗКУ МГтМ...');
+  console.log('\nВузли');
+  console.log(results.minCostArray);
+
+  console.log('\nРозклад:');
+  console.log(results.schedule);
+
+  console.log('\nСума переналаштувань:', results.lastCost, 'хв');
+  console.log('Тривалість уроків:', results.totalDuration, 'хв');
+  console.log('Час роботи тренера:', results.totalWorkTime, 'хв\n');
+
+  return results.totalWorkTime;
+}
+
+// Test Case
+// try {
+//   const numOfStudents = 8;
+//   const tau = 50;
+//   const deltaTau = 10;
+
+//   // outputResultsBnB(numOfStudents, tau, deltaTau);
+//   // let results = getResults(numOfStudents, tau, deltaTau);
+//   // console.log(results);
+// } catch (error) {
+//   console.error('Помилка:', error.message);
+// }
