@@ -3,6 +3,31 @@ import * as bnb from './branchesAndBounds.js';
 import * as calcShowResults from './calcShowResults.js';
 
 //////// РОЗВ`ЯЗОК ЗАДАЧІ МГтМ ТА ВИВЕДЕННЯ РЕЗУЛЬТАТІВ РОБОТИ АЛГОРИТМУ
+export function calcResultsBnB(matrix, trainingDuration) {
+  // Початок вимірювання часу
+  const startTime = performance.now();
+
+  // Виконання алгоритму гілок та границь
+  let { minCostArray, lastCost } = bnb.branchAndBound(matrix);
+
+  // Обчислення розкладу та часу роботи тренера
+  let schedule = calcShowResults.printSchedule(minCostArray);
+  let totalDuration = calcShowResults.sumOfDurations(trainingDuration);
+  let totalWorkTime = calcShowResults.calcTrainerWorkTime(
+    totalDuration,
+    lastCost
+  );
+
+  // Завершення вимірювання часу та виведення результату
+  const endTime = performance.now();
+  const executionTimeBnB = endTime - startTime;
+
+  return {
+    totalWorkTimeBnB: totalWorkTime,
+    scheduleBnB: schedule,
+    executionTimeBnB,
+  };
+}
 
 /**
  * Обчислює результати для заданих параметрів.
