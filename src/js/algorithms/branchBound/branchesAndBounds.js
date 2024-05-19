@@ -2,9 +2,14 @@
 import * as Generator from '../../generator/taskGenerator.js';
 import * as matrixReduction from './reduction.js';
 import * as preventCycle from './preventCycle.js';
+import * as results from './results.js';
+
+// ТРИВАЛОСТІ УРОКІВ
+// const trainingDuration = [40, 120, 90, 90, 60, 50, 60, 40];
+const trainingDuration = Generator.generateLessonDuration(10);
 
 // МАТРИЦЯ ПЕРЕНАЛАШТУВАНЬ
-// let matrix1 = Generator.generateMatrix(8, 15, 5);
+// let matrix = Generator.generateMatrix(10, 15, 5);
 
 let matrix = [
   [Infinity, 15, Infinity, 20, Infinity, 5, Infinity, 10],
@@ -20,7 +25,22 @@ let matrix = [
 console.log('\nМАТРИЦЯ ПЕРЕНАЛАШТУВАНЬ');
 console.table(matrix);
 
-// Метод границь і меж
+console.log('\nВУЗЛИ');
+const { minCostArray, lastCost } = branchAndBound(matrix);
+console.log(minCostArray);
+
+console.log('\nРОЗКЛАД: ');
+console.log(results.printSchedule(minCostArray));
+
+console.log('\nСума переналаштувань:', lastCost);
+
+const totalDuration = results.sumOfDurations(trainingDuration);
+console.log(`Тривалість уроків: `, totalDuration); // Total duration: 550 minutes
+
+const totalWorkTime = results.calcTrainerWorkTime(totalDuration, lastCost);
+console.log('Загальний час роботи тренера', totalWorkTime, '\n');
+
+// МЕТОД ГРАНИЦЬ І МЕЖ
 function branchAndBound(matrixData) {
   // Встановлення нескінченності на діагоналі матриці
   for (let i = 0; i < matrixData.length; i += 1) {
@@ -34,7 +54,7 @@ function branchAndBound(matrixData) {
   const minCostArray = []; // Масив для збереження мінімальної вартості
   const objRoot = matrixReduction.reduceMatrix(matrixData, 0); // Початкова редукція матриці
   minCostArray.push({
-    index: objRoot.index,
+    Node: objRoot.index + 1,
     cost: objRoot.cost,
   });
 
@@ -62,10 +82,10 @@ function branchAndBound(matrixData) {
     let objMinCost = objArrayTemp.reduce(function (prev, curr) {
       return prev.cost < curr.cost ? prev : curr;
     });
-    console.log(' Node: %d - Cost: %d ', objMinCost.index + 1, objMinCost.cost);
+    // console.log(' Node: %d - Cost: %d ', objMinCost.index + 1, objMinCost.cost);
 
     minCostArray.push({
-      index: objMinCost.index,
+      Node: objMinCost.index + 1,
       cost: objMinCost.cost,
     });
 
@@ -76,33 +96,6 @@ function branchAndBound(matrixData) {
 
   // Витяг останнього значення cost з масиву minCostArray
   const lastCost = minCostArray[minCostArray.length - 1].cost;
-  // console.log('Сума переналаштувань:', lastCost);
 
   return { minCostArray, lastCost };
 }
-
-console.log('\nВУЗЛИ');
-const { minCostArray, lastCost } = branchAndBound(matrix);
-
-console.log('\nminCostArray:\n');
-minCostArray.forEach((item, index) => {
-  console.log(`Index: ${index}, Cost: ${item.cost}`);
-});
-
-console.log('\nСума переналаштувань:', lastCost);
-
-// ТРИВАЛОСТІ УРОКІВ
-function sumOfDurations(durations) {
-  return durations.reduce((acc, duration) => acc + duration, 0);
-}
-
-const trainingDuration = [40, 120, 90, 90, 60, 50, 60, 40];
-const totalDuration = sumOfDurations(trainingDuration);
-console.log(`Тривалість уроків: `, totalDuration); // Total duration: 550 minutes
-
-function calcTrainerWorkTime(totalDuration, lastCost) {
-  return totalDuration + lastCost;
-}
-
-const totalWorkTime = calcTrainerWorkTime(totalDuration, lastCost);
-console.log('Загальний час роботи тренера', totalWorkTime, '\n');
