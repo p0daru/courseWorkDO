@@ -1,3 +1,6 @@
+// Pohorila Dariia
+
+// Заборона негамільтонових шляхів
 export function setRowColumnInfinity(matrix, from, to) {
   // Функція для встановлення нескінченності у вказаних рядках та стовпцях
   const thisMatrix = matrix.map(row => row.slice());

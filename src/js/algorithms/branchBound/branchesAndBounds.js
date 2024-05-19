@@ -1,47 +1,10 @@
 // Pohorila Dariia
-import * as Generator from '../../generator/taskGenerator.js';
 import * as matrixReduction from './reduction.js';
 import * as preventCycle from './preventCycle.js';
-import * as results from './results.js';
-
-// ТРИВАЛОСТІ УРОКІВ
-// const trainingDuration = [40, 120, 90, 90, 60, 50, 60, 40];
-const trainingDuration = Generator.generateLessonDuration(10);
-
-// МАТРИЦЯ ПЕРЕНАЛАШТУВАНЬ
-// let matrix = Generator.generateMatrix(10, 15, 5);
-
-let matrix = [
-  [Infinity, 15, Infinity, 20, Infinity, 5, Infinity, 10],
-  [5, Infinity, 15, Infinity, 5, Infinity, 10, Infinity],
-  [Infinity, 20, Infinity, 15, Infinity, 5, Infinity, 5],
-  [10, Infinity, 20, Infinity, 5, Infinity, 10, Infinity],
-  [Infinity, 15, Infinity, 15, Infinity, 5, Infinity, 5],
-  [10, Infinity, 15, Infinity, 10, Infinity, 10, Infinity],
-  [Infinity, 20, Infinity, 20, Infinity, 10, Infinity, 5],
-  [5, Infinity, 15, Infinity, 5, Infinity, 5, Infinity],
-];
-
-console.log('\nМАТРИЦЯ ПЕРЕНАЛАШТУВАНЬ');
-console.table(matrix);
-
-console.log('\nВУЗЛИ');
-const { minCostArray, lastCost } = branchAndBound(matrix);
-console.log(minCostArray);
-
-console.log('\nРОЗКЛАД:');
-console.log(results.printSchedule(minCostArray));
-
-console.log('\nСума переналаштувань:', lastCost, 'хв');
-
-const totalDuration = results.sumOfDurations(trainingDuration);
-console.log(`Тривалість уроків:`, totalDuration, 'хв');
-
-const totalWorkTime = results.calcTrainerWorkTime(totalDuration, lastCost);
-console.log('ЧАС РОБОТИ ТРЕНЕРА:', totalWorkTime, 'хв\n');
+// import * as setRowColumnInfinityJs from './setRowColumnInfinity.js';
 
 // МЕТОД ГРАНИЦЬ І МЕЖ
-function branchAndBound(matrixData) {
+export function branchAndBound(matrixData) {
   // Встановлення нескінченності на діагоналі матриці
   for (let i = 0; i < matrixData.length; i += 1) {
     for (let j = 0; j < matrixData.length; j += 1) {
@@ -99,3 +62,41 @@ function branchAndBound(matrixData) {
 
   return { minCostArray, lastCost };
 }
+
+////// OUTPUT
+////// DATA
+// ТРИВАЛОСТІ УРОКІВ
+// const trainingDuration = Generator.generateLessonDuration(numOfStudents);
+// const trainingDuration = [40, 120, 90, 90, 60, 50, 60, 40];
+
+// МАТРИЦЯ ПЕРЕНАЛАШТУВАНЬ
+// let matrix = Generator.generateMatrix(numOfStudents, tau, deltaTau);
+// let matrix = [
+//   [Infinity, 15, Infinity, 20, Infinity, 5, Infinity, 10],
+//   [5, Infinity, 15, Infinity, 5, Infinity, 10, Infinity],
+//   [Infinity, 20, Infinity, 15, Infinity, 5, Infinity, 5],
+//   [10, Infinity, 20, Infinity, 5, Infinity, 10, Infinity],
+//   [Infinity, 15, Infinity, 15, Infinity, 5, Infinity, 5],
+//   [10, Infinity, 15, Infinity, 10, Infinity, 10, Infinity],
+//   [Infinity, 20, Infinity, 20, Infinity, 10, Infinity, 5],
+//   [5, Infinity, 15, Infinity, 5, Infinity, 5, Infinity],
+// ];
+
+// console.log('\nМАТРИЦЯ ПЕРЕНАЛАШТУВАНЬ');
+// console.table(matrix);
+
+// console.log('\nВУЗЛИ');
+// const { minCostArray, lastCost } = branchAndBound(matrix);
+// console.log(minCostArray);
+
+// console.log('\nРОЗКЛАД:');
+// let schedule = results.printSchedule(minCostArray);
+// console.log(schedule);
+
+// console.log('\nСума переналаштувань:', lastCost, 'хв');
+
+// const totalDuration = results.sumOfDurations(trainingDuration);
+// console.log(`Тривалість уроків:`, totalDuration, 'хв');
+
+// const totalWorkTime = results.calcTrainerWorkTime(totalDuration, lastCost);
+// console.log('ЧАС РОБОТИ ТРЕНЕРА:', totalWorkTime, 'хв\n');
