@@ -44,15 +44,21 @@ const taskGenerator = {
   },
 
   /**
-   * Тестовий метод
+   * Генерує тривалість зайнять.
    */
-  // testMethod: function () {
-  //   console.log('hello');
-  // },
+  generateLessonDuration: function (numOfStudents) {
+    let times = [];
+    for (let i = 0; i < numOfStudents; i += 1) {
+      times.push(Math.floor(Math.random() * (120 - 45 + 1)) + 45);
+    }
+    return times;
+  },
 };
 
 // Експорт функцій
 export const generateMatrix = taskGenerator.generateMatrix;
+export const generateLessonDuration = taskGenerator.generateLessonDuration;
+
 // export const testMethod = taskGenerator.testMethod;
 
 //===== Test case 2 ====//
