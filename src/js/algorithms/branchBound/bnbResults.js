@@ -5,6 +5,19 @@ import * as calcShowResults from './calcShowResults.js';
 
 // Результати роботи МГтМ
 export function resultsBnB(numOfStudents, tau, deltaTau) {
+  // Перевірка вхідних даних
+  if (
+    !Number.isInteger(numOfStudents) ||
+    numOfStudents <= 0 ||
+    numOfStudents % 2 !== 0 || // к-сть учнів - парне число
+    tau < 0 ||
+    deltaTau < 0
+  ) {
+    throw new Error(
+      'Неправильні вхідні дані! Очікується ціле додатнє число numOfStudents додатне і парне , tau >= 0 та deltaTau >= 0.'
+    );
+  }
+
   console.log('ГЕНЕРАЦІЯ ІНДИВІДУАЛЬНОЇ ЗАДАЧІ...\n');
   console.log('1.ТРИВАЛІСТЬ ЗАЙНЯТЬ');
   const trainingDuration = Generator.generateLessonDuration(numOfStudents);
@@ -37,8 +50,8 @@ export function resultsBnB(numOfStudents, tau, deltaTau) {
   return { totalWorkTime, schedule };
 }
 
-// const numOfStudents = 8;
-// const tau = 100;
-// const deltaTau = 10;
+const numOfStudents = 8;
+const tau = 100;
+const deltaTau = 10;
 
-// resultsBnB(numOfStudents, tau, deltaTau);
+resultsBnB(numOfStudents, tau, deltaTau);

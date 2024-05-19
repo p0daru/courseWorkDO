@@ -13,11 +13,12 @@ const taskGenerator = {
     if (
       !Number.isInteger(numOfStudents) ||
       numOfStudents <= 0 ||
+      numOfStudents % 2 !== 0 || // к-сть учнів - парне число
       tau < 0 ||
       deltaTau < 0
     ) {
       throw new Error(
-        'Неправильні вхідні дані! Очікується ціле додатнє число numOfStudents, tau >= 0 та deltaTau >= 0.'
+        'Неправильні вхідні дані! Очікується ціле додатнє число numOfStudents додатне і парне , tau >= 0 та deltaTau >= 0.'
       );
     }
 
