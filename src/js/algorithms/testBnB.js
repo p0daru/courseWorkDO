@@ -1,4 +1,5 @@
 // // Pohorila Dariia
+import * as taskGenerator from '../generator/taskGenerator.js';
 
 function tspBranchAndBound(cities, distances) {
   const n = cities.length;
@@ -64,24 +65,6 @@ const cities = [
   'Denis',
 ];
 
-const distances = [
-  [NaN, 15, NaN, 20, NaN, 5, NaN, 10],
-  [5, NaN, 15, NaN, 5, NaN, 10, NaN],
-  [NaN, 20, NaN, 15, NaN, 5, NaN, 5],
-  [10, NaN, 20, NaN, 5, NaN, 10, NaN],
-  [NaN, 15, NaN, 15, NaN, 5, NaN, 5],
-  [10, NaN, 15, NaN, 10, NaN, 10, NaN],
-  [NaN, 20, NaN, 20, NaN, 10, NaN, 5],
-  [5, NaN, 15, NaN, 5, NaN, 5, NaN],
-];
-
-const result = tspBranchAndBound(cities, distances);
-console.log(
-  'Branch and Bound Optimal Order:',
-  result.order.map(idx => cities[idx]).join(' -> ')
-);
-console.log('Branch and Bound Optimal Distance:', result.distance);
-
 // const distances = [
 //   [Infinity, 15, Infinity, 20, Infinity, 5, Infinity, 10],
 //   [5, Infinity, 15, Infinity, 5, Infinity, 10, Infinity],
@@ -92,6 +75,23 @@ console.log('Branch and Bound Optimal Distance:', result.distance);
 //   [Infinity, 20, Infinity, 20, Infinity, 10, Infinity, 5],
 //   [5, Infinity, 15, Infinity, 5, Infinity, 5, Infinity],
 // ];
+
+let distances = taskGenerator.generateMatrix(8, 15, 5);
+console.table(distances);
+
+// const result = tspBranchAndBound(cities, distances);
+// console.log(
+//   'Branch and Bound Optimal Order:',
+//   result.order.map(idx => cities[idx]).join(' -> ')
+// );
+// console.log('Branch and Bound Optimal Distance:', result.distance);
+
+const result = tspBranchAndBound(cities, distances);
+console.log(
+  'Branch and Bound Optimal Order:',
+  result.order.map(idx => cities[idx]).join(' -> ')
+);
+console.log('Branch and Bound Optimal Distance:', result.distance);
 
 //////////////////=======================================
 

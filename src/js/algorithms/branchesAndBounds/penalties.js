@@ -14,7 +14,6 @@ export function calculatePenalties(matrix) {
     for (let j = 0; j < matrix[i].length; j += 1) {
       // Якщо знаходимо нуль
       if (matrix[i][j] === 0) {
-        // console.log('нуль');
         penalties[i][j] = calculatePenaltyForRowAndColumn(matrix, i, j);
       } else {
         penalties[i][j] = null; // Штраф не обчислюється для не-нульових елементів
@@ -43,12 +42,28 @@ export function calculatePenaltyForRowAndColumn(matrix, row, column) {
     .map(row => row[column])
     .filter(value => value !== Infinity);
 
-  // Знаходимо мінімальне значення рядка, якщо є такі значення
-  const minRowValue = rowValues.length > 0 ? Math.min(...rowValues) : 0;
+  // // Знаходимо мінімальне значення рядка, якщо є такі значення
+  // const minRowValue = rowValues.length > 0 ? Math.min(...rowValues) : 0;
 
-  // Знаходимо мінімальне значення стовпця, якщо є такі значення
-  const minColumnValue =
-    columnValues.length > 0 ? Math.min(...columnValues) : 0;
+  // // Знаходимо мінімальне значення стовпця, якщо є такі значення
+  // const minColumnValue =
+  //   columnValues.length > 0 ? Math.min(...columnValues) : 0;
+
+  // Знаходимо мінімальне значення рядка, використовуючи цикл
+  let minRowValue = rowValues[0];
+  for (let i = 1; i < rowValues.length; i++) {
+    if (rowValues[i] < minRowValue) {
+      minRowValue = rowValues[i];
+    }
+  }
+
+  // Знаходимо мінімальне значення стовпця, використовуючи цикл
+  let minColumnValue = columnValues[0];
+  for (let i = 1; i < columnValues.length; i++) {
+    if (columnValues[i] < minColumnValue) {
+      minColumnValue = columnValues[i];
+    }
+  }
 
   // Повертаємо суму мінімальних значень рядка та стовпця
   return minRowValue + minColumnValue;
@@ -60,7 +75,7 @@ export function calculatePenaltyForRowAndColumn(matrix, row, column) {
  * @return {object} - Об'єкт з максимальним штрафом та його координатами { value, row, column }
  */
 // Початковий масив для зберігання координат ребер
-export let edgesArray = [];
+export let paths = [];
 
 export function findMaxPenalty(penaltiesMatrix) {
   let maxValue = -Infinity; //  максимальне значення штрафу (на початку ініціалізуємо як нуль)
@@ -90,7 +105,7 @@ export function findMaxPenalty(penaltiesMatrix) {
   }
 
   // Додаємо координати рядка та стовпця максимального штрафу до масиву ребер
-  edgesArray.push([maxRow + 1, maxColumn + 1]); // Додаємо координати рядка та стовпця (+1 для збігу з порядковим номером)
+  paths.push([maxRow + 1, maxColumn + 1]); // Додаємо координати рядка та стовпця (+1 для збігу з порядковим номером)
 
   // координати задаються не індексом, а порядковим номером (+1)
   return { value: maxValue, row: maxRow + 1, column: maxColumn + 1 };
