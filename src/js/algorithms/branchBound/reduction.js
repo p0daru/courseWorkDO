@@ -1,3 +1,5 @@
+// Pohorila Dariia
+
 // Функція для редукції матриці (мінімізація по рядках і стовпцях)
 export function reduceMatrix(matrix, index) {
   let sumMinRows = 0; // Сума мінімальних значень по рядках
