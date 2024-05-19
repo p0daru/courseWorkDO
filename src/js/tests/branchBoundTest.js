@@ -18,7 +18,6 @@ function testBnb(numOfStudents, tau, deltaTauMassive) {
     );
 
     console.log(`\nІТЕРАЦІЯ ${i + 1}`);
-    results.outputResultsBnB(matrix, trainingDuration);
     let res = results.outputResultsBnB(matrix, trainingDuration);
     targetFunctions.push(res);
   }
@@ -26,6 +25,4 @@ function testBnb(numOfStudents, tau, deltaTauMassive) {
   return targetFunctions;
 }
 
-testBnb(numOfStudents, tau, deltaTauMassive);
-let res = testBnb(numOfStudents, tau, deltaTauMassive);
-console.log(res);
+console.log(testBnb(numOfStudents, tau, deltaTauMassive));
