@@ -29,16 +29,16 @@ console.log('\nВУЗЛИ');
 const { minCostArray, lastCost } = branchAndBound(matrix);
 console.log(minCostArray);
 
-console.log('\nРОЗКЛАД: ');
+console.log('\nРОЗКЛАД:');
 console.log(results.printSchedule(minCostArray));
 
-console.log('\nСума переналаштувань:', lastCost);
+console.log('\nСума переналаштувань:', lastCost, 'хв');
 
 const totalDuration = results.sumOfDurations(trainingDuration);
-console.log(`Тривалість уроків: `, totalDuration); // Total duration: 550 minutes
+console.log(`Тривалість уроків:`, totalDuration, 'хв');
 
 const totalWorkTime = results.calcTrainerWorkTime(totalDuration, lastCost);
-console.log('Загальний час роботи тренера', totalWorkTime, '\n');
+console.log('ЧАС РОБОТИ ТРЕНЕРА:', totalWorkTime, 'хв\n');
 
 // МЕТОД ГРАНИЦЬ І МЕЖ
 function branchAndBound(matrixData) {
