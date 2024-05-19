@@ -5,7 +5,7 @@ import * as calcShowResults from './calcShowResults.js';
 
 // Результати роботи МГтМ
 export function resultsBnB(numOfStudents, tau, deltaTau) {
-  console.log('\nГЕНЕРАЦІЯ ІНДИВІДУАЛЬНОЇ ЗАДАЧІ...\n');
+  console.log('ГЕНЕРАЦІЯ ІНДИВІДУАЛЬНОЇ ЗАДАЧІ...\n');
   console.log('1.ТРИВАЛІСТЬ ЗАЙНЯТЬ');
   const trainingDuration = Generator.generateLessonDuration(numOfStudents);
   console.table(trainingDuration);
