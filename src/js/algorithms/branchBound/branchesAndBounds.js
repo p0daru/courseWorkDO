@@ -4,20 +4,21 @@ import * as matrixReduction from './reduction.js';
 import * as preventCycle from './preventCycle.js';
 
 // МАТРИЦЯ ПЕРЕНАЛАШТУВАНЬ
-console.log('\nМАТРИЦЯ ПЕРЕНАЛАШТУВАНЬ');
-let matrix = Generator.generateMatrix(8, 15, 5);
-console.table(matrix);
+// let matrix1 = Generator.generateMatrix(8, 15, 5);
 
-// let matrix = [
-//   [Infinity, 15, Infinity, 20, Infinity, 5, Infinity, 10],
-//   [5, Infinity, 15, Infinity, 5, Infinity, 10, Infinity],
-//   [Infinity, 20, Infinity, 15, Infinity, 5, Infinity, 5],
-//   [10, Infinity, 20, Infinity, 5, Infinity, 10, Infinity],
-//   [Infinity, 15, Infinity, 15, Infinity, 5, Infinity, 5],
-//   [10, Infinity, 15, Infinity, 10, Infinity, 10, Infinity],
-//   [Infinity, 20, Infinity, 20, Infinity, 10, Infinity, 5],
-//   [5, Infinity, 15, Infinity, 5, Infinity, 5, Infinity],
-// ];
+let matrix = [
+  [Infinity, 15, Infinity, 20, Infinity, 5, Infinity, 10],
+  [5, Infinity, 15, Infinity, 5, Infinity, 10, Infinity],
+  [Infinity, 20, Infinity, 15, Infinity, 5, Infinity, 5],
+  [10, Infinity, 20, Infinity, 5, Infinity, 10, Infinity],
+  [Infinity, 15, Infinity, 15, Infinity, 5, Infinity, 5],
+  [10, Infinity, 15, Infinity, 10, Infinity, 10, Infinity],
+  [Infinity, 20, Infinity, 20, Infinity, 10, Infinity, 5],
+  [5, Infinity, 15, Infinity, 5, Infinity, 5, Infinity],
+];
+
+console.log('\nМАТРИЦЯ ПЕРЕНАЛАШТУВАНЬ');
+console.table(matrix);
 
 // Метод границь і меж
 function branchAndBound(matrixData) {
