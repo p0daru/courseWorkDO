@@ -1,5 +1,6 @@
 import * as Generator from '../generator/taskGenerator.js';
 import * as resultsGreedy from '../algorithms/greedy.js';
+import * as resultsAnt from '../algorithms/ant/ant.js';
 import * as resultsBnB from '../algorithms/branchBound/bnbResults.js';
 import * as resultsPP from '../algorithms/pairwisePermut.js';
 
@@ -56,7 +57,7 @@ function timeTest(numOfStudents, tau, deltaTau) {
       const resGreedy =
         resultsGreedy.getGreedyResults(matrix).executionTimeGreedy;
       // мурахи
-      //   const resAnt = resultsPP.getResultsPP(matrix).executionTimePairwise;
+      const resAnt = resultsAnt.ant(numOfStudents, matrix).executionTime;
       // МГтМ
       const resBnB = resultsBnB.calcResultsBnB(
         matrix,
@@ -70,7 +71,7 @@ function timeTest(numOfStudents, tau, deltaTau) {
       execTimesGreedy.push(resGreedy);
       execTimesBnB.push(resBnB);
       execTimesPP.push(resPP);
-      execTimesAnt.push(resPP);
+      execTimesAnt.push(resAnt);
     }
 
     // Обчислюємо середні часи та додаємо до масиву відповідного алгоритму
