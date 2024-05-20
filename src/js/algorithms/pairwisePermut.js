@@ -1,12 +1,4 @@
-import { generateMatrix, greedySchedule } from './greedy.js';
-
-function calculateTotalPreparationTime(matrix, schedule) {
-  let total = 0;
-  for (let i = 0; i < schedule.length - 1; i++) {
-    total += matrix[schedule[i]][schedule[i + 1]];
-  }
-  return total;
-}
+import { generateMatrix, greedySchedule, calculateTotalPreparationTime } from './greedy.js';
 
 function swapPairs(schedule, numOfStudents) {
   let newSchedule = schedule.slice();
@@ -54,41 +46,12 @@ function optimizeSchedule(matrix, initialSchedule, maxIterations) {
   return { bestSchedule, bestTime };
 }
 
-// Usage example
-// let numOfStudents = 8; // Must be even
-// let tau = 15;
-// let deltaTau = 5;
-// let maxIterations = 10000;
-
-// let matrix = generateMatrix(numOfStudents, tau, deltaTau);
-// console.table(matrix);
-
-// let initialSchedule = greedySchedule(matrix);
-// console.log('Initial Greedy Schedule:', initialSchedule);
-
-// let initialTime = calculateTotalPreparationTime(matrix, initialSchedule);
-// console.log('Total Preparation Time for Initial Greedy Schedule:', initialTime);
-
-// let { bestSchedule, bestTime } = optimizeSchedule(
-//   matrix,
-//   initialSchedule,
-//   maxIterations
-// );
-
-// console.log('Optimized Schedule:', bestSchedule);
-// console.log('Total Preparation Time:', bestTime);
-
 // Additional func for the timeTest
 export function getResultsPP(
   matrix,
   initialSchedule = greedySchedule(matrix),
   maxIterations = 1000
 ) {
-  // if there is no data in parameters
-  // maxIterations = 1000
-  // initialSchedule = greedySchedule(matrix),
-
-  // Початок вимірювання часу
   const startTime = performance.now();
 
   let schedule = initialSchedule;
@@ -109,7 +72,6 @@ export function getResultsPP(
     i++;
   }
 
-  // Завершення вимірювання часу та виведення результату
   const endTime = performance.now();
   const executionTimePairwise = endTime - startTime;
 
