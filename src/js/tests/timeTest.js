@@ -1,10 +1,284 @@
 import * as Generator from '../generator/taskGenerator.js';
+import * as resultsGreedy from '../algorithms/greedy.js';
 import * as resultsBnB from '../algorithms/branchBound/bnbResults.js';
+import * as resultsPP from '../algorithms/pairwisePermut.js';
 
 // Вхідні дані
 const numOfStudents = [4, 6, 8, 10, 12, 14, 16, 18, 20]; // розмірність задачі
 const tau = 100; // значення математичного сподівання
 const deltaTau = 10; // значення напівінтервалу
+
+// Обчислити середнє значення масиву
+function calculateAverage(array) {
+  if (array.length === 0) {
+    return 0; // Повертаємо 0, якщо масив пустий
+  }
+
+  const sum = array.reduce((total, current) => total + current, 0);
+  return sum / array.length;
+}
+
+// Тестування
+function timeTest(numOfStudents, tau, deltaTau) {
+  // Часи виконання алгоритмів та середні часи виконання алгоритмів
+  let averageTimesGreedy = [];
+  let averageTimesAnt = [];
+  let averageTimesBnB = [];
+  let averageTimesPP = [];
+
+  for (let i = 0; i < numOfStudents.length; i += 1) {
+    // 20 прогонів
+    let execTimesGreedy = [];
+    let execTimesAnt = [];
+    let execTimesBnB = [];
+    let execTimesPP = [];
+
+    for (let j = 0; j < 20; j += 1) {
+      // Генеруємо тривалості уроків та матрицю переналаштувань
+      const trainingDuration = Generator.generateLessonDuration(
+        numOfStudents[i],
+        tau,
+        deltaTau
+      );
+      const matrix = Generator.generateMatrix(numOfStudents[i], tau, deltaTau);
+
+      // Обчислюємо роботи алгоритмів
+      // жадібний
+      const resGreedy =
+        resultsGreedy.getGreedyResults(matrix).executionTimeGreedy;
+      // мурахи
+      //   const resAnt = resultsPP.getResultsPP(matrix).executionTimePairwise;
+      // МГтМ
+      const resBnB = resultsBnB.calcResultsBnB(
+        matrix,
+        trainingDuration
+      ).executionTimeBnB;
+
+      // перестановки
+      const resPP = resultsPP.getResultsPP(matrix).executionTimePairwise;
+
+      // Додаємо часи в масив відповідного алгоритму
+      execTimesGreedy.push(resGreedy);
+      execTimesBnB.push(resBnB);
+      execTimesPP.push(resPP);
+      execTimesAnt.push(resPP);
+    }
+
+    // Обчислюємо середні часи та додаємо до масиву відповідного алгоритму
+    averageTimesGreedy.push(calculateAverage(execTimesGreedy));
+    averageTimesBnB.push(calculateAverage(execTimesBnB));
+    averageTimesPP.push(calculateAverage(execTimesPP));
+    averageTimesAnt.push(calculateAverage(execTimesPP));
+  }
+
+  return {
+    labels: numOfStudents, // мітки графіка по горизонталі
+    averageTimesGreedy,
+    averageTimesAnt,
+    averageTimesBnB,
+    averageTimesPP,
+  };
+}
+
+// Приклад виклику функції
+let { averageTimesGreedy, averageTimesAnt, averageTimesBnB, averageTimesPP } =
+  timeTest(numOfStudents, tau, deltaTau);
+
+console.log(averageTimesGreedy);
+console.log(averageTimesAnt);
+console.log(averageTimesBnB);
+console.log(averageTimesPP);
+
+const data = timeTest(numOfStudents, tau, deltaTau);
+drawTimeChart(data, 'timeTest');
+
+function drawTimeChart(data, htmlElement) {
+  const ctx = document.getElementById(htmlElement).getContext('2d');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.labels,
+      datasets: [
+        {
+          label: 'Greedy',
+          data: data.averageTimesGreedy,
+          backgroundColor: 'rgb(96, 130, 182)',
+          borderColor: 'rgba(70, 130, 180, 1)',
+          borderWidth: 0,
+        },
+        {
+          label: 'Ant',
+          data: data.averageTimesAnt,
+          backgroundColor: 'rgb(182, 96, 130)',
+          borderColor: 'rgba(180, 70, 130, 1)',
+          borderWidth: 0,
+        },
+        {
+          label: 'BnB',
+          data: data.averageTimesBnB,
+          backgroundColor: 'rgb(96, 182, 130)',
+          borderColor: 'rgba(70, 180, 130, 1)',
+          borderWidth: 0,
+        },
+        {
+          label: 'Pairwise',
+          data: data.averageTimesPP,
+          backgroundColor: 'rgb(130, 96, 182)',
+          borderColor: 'rgba(130, 70, 180, 1)',
+          borderWidth: 0,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Average Execution Time vs Number of Students',
+        },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              return `Average Execution Time: ${context.raw}`;
+            },
+          },
+        },
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Number of Students (n)',
+          },
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Average Execution Time (ms)',
+          },
+        },
+      },
+      layout: {
+        backgroundColor: 'rgba(211, 211, 211, 1)',
+      },
+    },
+  });
+}
+
+// function drawTimeChart(averageTimesGreedy, labels, htmlElement) {
+//   const ctx = document.getElementById(htmlElement).getContext('2d');
+//   new Chart(ctx, {
+//     type: 'bar',
+//     data: {
+//       labels: labels,
+//       datasets: [
+//         {
+//           label: 'Greedy',
+//           data: averageTimesGreedy,
+//           backgroundColor: 'rgb(96, 130, 182)',
+//           borderColor: 'rgba(70, 130, 180, 1)',
+//           borderWidth: 0,
+//         },
+//       ],
+//     },
+//     options: {
+//       scales: {
+//         y: {
+//           beginAtZero: true,
+//         },
+//       },
+//     },
+//   });
+// }
+
+// function drawTimeChart(data, htmlElement) {
+//   const ctx = document.getElementById(htmlElement).getContext('2d');
+//   new Chart(ctx, {
+//     type: 'bar',
+//     data: {
+//       labels: data.averageTimesGreedy, // Горизонтальна вісь: час виконання
+//       datasets: [
+//         {
+//           label: 'Greedy',
+//           data: data.labels, // Вертикальна вісь: кількість студентів
+//           backgroundColor: 'rgb(96, 130, 182)',
+//           borderColor: 'rgba(70, 130, 180, 1)',
+//           borderWidth: 0,
+//         },
+//         {
+//           label: 'Ant',
+//           data: data.averageTimesAnt,
+//           backgroundColor: 'rgb(182, 96, 130)',
+//           borderColor: 'rgba(180, 70, 130, 1)',
+//           borderWidth: 0,
+//         },
+//         {
+//           label: 'BnB',
+//           data: data.averageTimesBnB,
+//           backgroundColor: 'rgb(96, 182, 130)',
+//           borderColor: 'rgba(70, 180, 130, 1)',
+//           borderWidth: 0,
+//         },
+//         {
+//           label: 'Pairwise',
+//           data: data.averageTimesPairwise,
+//           backgroundColor: 'rgb(130, 96, 182)',
+//           borderColor: 'rgba(130, 70, 180, 1)',
+//           borderWidth: 0,
+//         },
+//       ],
+//     },
+//     options: {
+//       responsive: true,
+//       plugins: {
+//         legend: {
+//           position: 'top',
+//         },
+//         title: {
+//           display: true,
+//           text: 'Average Execution Time vs Number of Students',
+//         },
+//         tooltip: {
+//           callbacks: {
+//             label: function (context) {
+//               return `Average Execution Time: ${context.raw}`;
+//             },
+//           },
+//         },
+//       },
+//       scales: {
+//         x: {
+//           beginAtZero: true,
+//           title: {
+//             display: true,
+//             text: 'Average Execution Time',
+//           },
+//         },
+//         y: {
+//           beginAtZero: true,
+//           title: {
+//             display: true,
+//             text: 'Number of Students (n)',
+//           },
+//         },
+//       },
+//       layout: {
+//         backgroundColor: 'rgba(211, 211, 211, 1)',
+//       },
+//     },
+//   });
+// }
+
+/**
+ * Результати:
+ * для різних ен виводимо середній час роботи одного і того ж алгоритма
+ */
 
 // function timeTest(numOfStudents, tau, deltaTau) {
 //   // Часи виконання алгоритмів
@@ -57,64 +331,3 @@ const deltaTau = 10; // значення напівінтервалу
 
 //   return { execTimes, aveTimes };
 // }
-
-function timeTest(numOfStudents, tau, deltaTau) {
-  // Часи виконання алгоритмів та середні часи виконання алгоритмів
-  const execTimes = [];
-  const aveTimes = [];
-
-  for (let i = 0; i < numOfStudents.length; i += 1) {
-    let execTimeBnB = [];
-    let execTimeGreedy = [];
-    let execTimeAnt = [];
-    let execTimePairwise = [];
-
-    // 20 прогонів
-    for (let j = 0; j < 20; j += 1) {
-      // Генеруємо тривалості уроків та матрицю переналаштувань
-      const trainingDuration = Generator.generateLessonDuration(
-        numOfStudents[i],
-        tau,
-        deltaTau
-      );
-      const matrix = Generator.generateMatrix(numOfStudents[i], tau, deltaTau);
-
-      // Обчислюємо роботи алгоритмів
-      const resBnB = resultsBnB.calcResultsBnB(matrix, trainingDuration);
-
-      // Додаємо часи в масив відповідного алгоритму
-      execTimeBnB.push(resBnB.executionTimeBnB);
-      execTimeGreedy.push(resBnB.executionTimeBnB);
-      execTimeAnt.push(resBnB.executionTimeBnB);
-      execTimePairwise.push(resBnB.executionTimeBnB);
-    }
-
-    // Округлення до двох знаків після коми та додавання до середніх часів
-    const averageTimeBnB = parseFloat(average(execTimeBnB).toFixed(2));
-    const averageTimeGreedy = parseFloat(average(execTimeBnB).toFixed(2));
-    const averageTimeAnt = parseFloat(average(execTimeBnB).toFixed(2));
-    const averageTimePairwise = parseFloat(average(execTimeBnB).toFixed(2));
-
-    aveTimes.push([
-      [averageTimeGreedy],
-      [averageTimeAnt],
-      [averageTimeBnB],
-      [averageTimePairwise],
-    ]);
-    execTimes.push([
-      [execTimeGreedy],
-      [execTimeAnt],
-      execTimeBnB,
-      [execTimePairwise],
-    ]);
-  }
-
-  return { execTimes, aveTimes };
-}
-
-function average(arr) {
-  const sum = arr.reduce((acc, val) => acc + val, 0);
-  return sum / arr.length;
-}
-
-console.log(timeTest(numOfStudents, tau, deltaTau));
