@@ -25,8 +25,8 @@ function testBnb(numOfStudents, tau, deltaTauMassive) {
   return targetFunctions;
 }
 
-// let targetFunctions = testBnb(numOfStudents, tau, deltaTauMassive);
-// console.log(targetFunctions);
+let targetFunctions = testBnb(numOfStudents, tau, deltaTauMassive);
+console.log(targetFunctions);
 
 // Вивести результати у вигляді графіка
 function drawChart(deltaTauMassive, targetFunctions, htmlElement) {
@@ -84,7 +84,3 @@ function drawChart(deltaTauMassive, targetFunctions, htmlElement) {
 }
 
 drawChart(deltaTauMassive, targetFunctions, 'bnbTest');
-// drawChart(deltaTauMassive, targetFunctions, 'bnbTest1');
-
-// console.log(`\nІТЕРАЦІЯ ${i + 1}`);
-// let res = results.outputResultsBnB(matrix, trainingDuration);
