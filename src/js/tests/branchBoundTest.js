@@ -1,6 +1,8 @@
 import * as results from '../algorithms/branchBound/bnbResults.js';
 import * as Generator from '../generator/taskGenerator.js';
 
+import asciichart from 'asciichart';
+
 // Вхідні дані
 const numOfStudents = 8;
 const tau = 100;
@@ -17,12 +19,73 @@ function testBnb(numOfStudents, tau, deltaTauMassive) {
       deltaTauMassive[i]
     );
 
-    console.log(`\nІТЕРАЦІЯ ${i + 1}`);
-    let res = results.outputResultsBnB(matrix, trainingDuration);
-    targetFunctions.push(res);
+    let res = results.calcResultsBnB(matrix, trainingDuration);
+    targetFunctions.push(res.totalWorkTimeBnB);
   }
 
   return targetFunctions;
 }
 
-console.log(testBnb(numOfStudents, tau, deltaTauMassive));
+let targetFunctions = testBnb(numOfStudents, tau, deltaTauMassive);
+console.log(targetFunctions);
+
+// Вивести результати у вигляді графіка
+function drawChart(deltaTauMassive, targetFunctions, htmlElement) {
+  const ctx = document.getElementById(htmlElement).getContext('2d');
+  new Chart(ctx, {
+    type: 'bar', // стовпчаста діаграма
+    data: {
+      labels: deltaTauMassive,
+      datasets: [
+        {
+          label: 'ЦФ vs ∆τ',
+          data: targetFunctions,
+          backgroundColor: 'rgb(96, 130, 182)', // Блакитний колір для стовпців
+          borderColor: 'rgba(70, 130, 180, 1)',
+          borderWidth: 0,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Графік залежності ЦФ від ∆τ',
+        },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              return `Цільова функція: ${context.raw}`;
+            },
+          },
+        },
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: '∆τ',
+          },
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'ЦФ',
+          },
+        },
+      },
+    },
+  });
+}
+
+drawChart(deltaTauMassive, targetFunctions, 'bnbTest');
+// drawChart(deltaTauMassive, targetFunctions, 'bnbTest1');
+
+// console.log(`\nІТЕРАЦІЯ ${i + 1}`);
+// let res = results.outputResultsBnB(matrix, trainingDuration);
