@@ -8,15 +8,24 @@ const numOfStudents = [4, 6, 8, 10, 12, 14, 16, 18, 20]; // розмірніст
 const tau = 100; // значення математичного сподівання
 const deltaTau = 10; // значення напівінтервалу
 
-// Обчислити середнє значення масиву
-function calculateAverage(array) {
-  if (array.length === 0) {
-    return 0; // Повертаємо 0, якщо масив пустий
-  }
+// Приклад виклику функції
+const data = timeTest(numOfStudents, tau, deltaTau);
+drawTimeChart(data, 'timeTest'); // вивід гістограм
 
-  const sum = array.reduce((total, current) => total + current, 0);
-  return sum / array.length;
-}
+// середні часи для відображення в консолі
+let { averageTimesGreedy, averageTimesAnt, averageTimesBnB, averageTimesPP } =
+  timeTest(numOfStudents, tau, deltaTau);
+
+console.log('averageTimesGreedy – ', averageTimesGreedy);
+console.log('averageTimesAnt – ', averageTimesAnt);
+console.log('averageTimesBnB – ', averageTimesBnB);
+console.log('averageTimesPP – ', averageTimesPP);
+
+// console.log([
+//   0.0028103500000007386, 0.002972900000001033, 0.004435449999999008,
+//   0.003060350000001222, 0.004820950000004131, 0.0057521000000008374,
+//   0.006731249999998567, 0.00821250000000191, 0.009808300000005942,
+// ]);
 
 // Тестування
 function timeTest(numOfStudents, tau, deltaTau) {
@@ -68,7 +77,7 @@ function timeTest(numOfStudents, tau, deltaTau) {
     averageTimesGreedy.push(calculateAverage(execTimesGreedy));
     averageTimesBnB.push(calculateAverage(execTimesBnB));
     averageTimesPP.push(calculateAverage(execTimesPP));
-    averageTimesAnt.push(calculateAverage(execTimesPP));
+    averageTimesAnt.push(calculateAverage(execTimesAnt));
   }
 
   return {
@@ -80,18 +89,7 @@ function timeTest(numOfStudents, tau, deltaTau) {
   };
 }
 
-// Приклад виклику функції
-let { averageTimesGreedy, averageTimesAnt, averageTimesBnB, averageTimesPP } =
-  timeTest(numOfStudents, tau, deltaTau);
-
-console.log(averageTimesGreedy);
-console.log(averageTimesAnt);
-console.log(averageTimesBnB);
-console.log(averageTimesPP);
-
-const data = timeTest(numOfStudents, tau, deltaTau);
-drawTimeChart(data, 'timeTest');
-
+// Виводимо гістограми
 function drawTimeChart(data, htmlElement) {
   const ctx = document.getElementById(htmlElement).getContext('2d');
 
@@ -105,28 +103,28 @@ function drawTimeChart(data, htmlElement) {
           data: data.averageTimesGreedy,
           backgroundColor: 'rgb(96, 130, 182)',
           borderColor: 'rgba(70, 130, 180, 1)',
-          borderWidth: 0,
+          borderWidth: 1,
         },
         {
           label: 'Ant',
           data: data.averageTimesAnt,
           backgroundColor: 'rgb(182, 96, 130)',
           borderColor: 'rgba(180, 70, 130, 1)',
-          borderWidth: 0,
+          borderWidth: 1,
         },
         {
           label: 'BnB',
           data: data.averageTimesBnB,
           backgroundColor: 'rgb(96, 182, 130)',
           borderColor: 'rgba(70, 180, 130, 1)',
-          borderWidth: 0,
+          borderWidth: 1,
         },
         {
           label: 'Pairwise',
           data: data.averageTimesPP,
           backgroundColor: 'rgb(130, 96, 182)',
           borderColor: 'rgba(130, 70, 180, 1)',
-          borderWidth: 0,
+          borderWidth: 1,
         },
       ],
     },
@@ -150,14 +148,14 @@ function drawTimeChart(data, htmlElement) {
       },
       scales: {
         x: {
-          beginAtZero: true,
+          beginAtZero: false,
           title: {
             display: true,
             text: 'Number of Students (n)',
           },
         },
         y: {
-          beginAtZero: true,
+          beginAtZero: false,
           title: {
             display: true,
             text: 'Average Execution Time (ms)',
@@ -171,6 +169,21 @@ function drawTimeChart(data, htmlElement) {
   });
 }
 
+// Обчислити середнє значення масиву
+function calculateAverage(arr) {
+  if (arr.length === 0) {
+    return 0; // Повертаємо 0, якщо масив пустий
+  }
+
+  let sum = 0;
+  for (let i = 0; i < arr.length; i++) {
+    sum += arr[i];
+  }
+
+  return sum / arr.length;
+}
+
+///////// OTHER
 // function drawTimeChart(averageTimesGreedy, labels, htmlElement) {
 //   const ctx = document.getElementById(htmlElement).getContext('2d');
 //   new Chart(ctx, {
