@@ -1,9 +1,8 @@
 // Kovalenko Kateryna
-import { generateMatrix } from '../../generator/taskGenerator.js';
+import * as Generator from '../../generator/taskGenerator.js';
 export function ant_console(n, t_matrix, alpha) {
     // Вимірювання часу виконання алгоритму
     const startTime = performance.now();
-
     // Параметри алгоритму 
     let beta = 1;
     let tay_0 = 0.7;
@@ -14,8 +13,14 @@ export function ant_console(n, t_matrix, alpha) {
     let lMax = 10;
     let result = [];
     let result_func;
+    let repr = 0;
 
     let t_use = t_matrix.slice().map(row => row.slice());
+    //Матриця тривалостей уроків
+    let less_matrix = Generator.generateLessonDuration(n);
+
+    console.log("Тривалості занять:");
+    console.table(less_matrix);
 
     console.log("Матриця переналаштувань:");
     console.table(t_matrix);
@@ -105,6 +110,7 @@ export function ant_console(n, t_matrix, alpha) {
         let iteration_matrix = t_matrix.slice().map(row => row.slice());
         let result_it = []; // змінна з результатами кожної ітерації
         let result_it_func = 0;
+        let repr_it = 0;
         let visited_array = Array.from({ length: n }, () => Array(n).fill(0));
         result_it.push(student);
         while (result_it.length < n) {
@@ -150,10 +156,12 @@ export function ant_console(n, t_matrix, alpha) {
             console.log();
         }
         // Обчислення ЦФ :
+
         for (let i = 0; i < result_it.length - 1; i++) {
             const currentStudent = result_it[i];
             const nextStudent = result_it[i + 1];
-            result_it_func += parseFloat(t_matrix[currentStudent][nextStudent]);
+            result_it_func += parseFloat(t_matrix[currentStudent][nextStudent]) + less_matrix[i];
+            repr_it += parseFloat(t_matrix[currentStudent][nextStudent]);
             visited_array[currentStudent][nextStudent] = 1;
         }
         console.table(t_matrix);
@@ -178,18 +186,23 @@ export function ant_console(n, t_matrix, alpha) {
         if (k === 1) {
             result = result_it;
             result_func = result_it_func;
+            repr = repr_it;
         } else if (result_func > result_it_func) {
             result = result_it;
             result_func = result_it_func;
+            repr = repr_it;
         }
     }
-    console.log();
-    console.log("------------------------------------------------------");
-    console.log("Кінцевий результат: ", result);
-    console.log("Значення ЦФ: ", result_func);
     //////
     const endTime = performance.now();
     const executionTime = endTime - startTime;
+    console.log();
+    console.log("------------------------------------------------------");
+    console.log("Кінцевий результат: ", result);
+    console.log("Час переналаштувань: ", repr);
+    console.log("Значення ЦФ: ", result_func);
+    console.log("ExecutionTime: ", executionTime);
+
 
     return { result, result_func, executionTime };
 }
@@ -197,6 +210,7 @@ export function ant_console(n, t_matrix, alpha) {
 // Test Case
 try {
     // let t_matrix = generateMatrix(8, 10, 5);
+
     const n = 8;
     let t_matrix = [
         [Infinity, 15, Infinity, 20, Infinity, 5, Infinity, 10],

@@ -1,5 +1,5 @@
 // Kovalenko Kateryna
-import { generateMatrix } from '../../generator/taskGenerator.js';
+import * as Generator from '../../generator/taskGenerator.js';
 export function ant(n, t_matrix, alpha) {
     // Вимірювання часу виконання алгоритму
     const startTime = performance.now();
@@ -17,7 +17,8 @@ export function ant(n, t_matrix, alpha) {
     let result_func;
 
     let t_use = t_matrix.slice().map(row => row.slice());
-
+    //Матриця тривалостей уроків
+    let less_matrix = Generator.generateLessonDuration(n);
 
     // Зведення матриці переналаштувань 
 
@@ -139,7 +140,7 @@ export function ant(n, t_matrix, alpha) {
         for (let i = 0; i < result_it.length - 1; i++) {
             const currentStudent = result_it[i];
             const nextStudent = result_it[i + 1];
-            result_it_func += parseFloat(t_matrix[currentStudent][nextStudent]);
+            result_it_func += parseFloat(t_matrix[currentStudent][nextStudent]) + less_matrix[i];
             visited_array[currentStudent][nextStudent] = 1;
         }
 
@@ -164,12 +165,14 @@ export function ant(n, t_matrix, alpha) {
             result_func = result_it_func;
         }
     }
-
-    console.log("Розклад: ", result);
-    console.log("Значення ЦФ: ", result_func);
     //////
     const endTime = performance.now();
     const executionTime = endTime - startTime;
+    console.log("Розклад: ", result);
+    console.log("Значення ЦФ: ", result_func);
+    console.log("ExecutionTime: ", executionTime);
+
+
 
     return { result, result_func, executionTime };
 }
