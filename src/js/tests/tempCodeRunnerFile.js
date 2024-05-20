@@ -1,1 +1,0 @@
-  const trainingDuration = Generator.generateLessonDuration(numOfStudents);
