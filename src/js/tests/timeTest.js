@@ -53,21 +53,23 @@ function timeTest(numOfStudents, tau, deltaTau) {
       const matrix = Generator.generateMatrix(numOfStudents[i], tau, deltaTau);
 
       // Обчислюємо роботи алгоритмів
+      const step = 0.1;
+
       // жадібний
       const resGreedy =
-        resultsGreedy.getGreedyResults(matrix).executionTimeGreedy;
+        resultsGreedy.getGreedyResults(matrix).executionTimeGreedy + step;
       // мурахи
-      const resAnt = resultsAnt.ant(numOfStudents, matrix).executionTime;
+      const resAnt = resultsAnt.ant(numOfStudents, matrix).executionTime + step;
       // МГтМ
-      const resBnB = resultsBnB.calcResultsBnB(
-        matrix,
-        trainingDuration
-      ).executionTimeBnB;
+      const resBnB =
+        resultsBnB.calcResultsBnB(matrix, trainingDuration).executionTimeBnB +
+        step;
 
       // перестановки
-      const resPP = resultsPP.getResultsPP(matrix).executionTimePairwise;
+      const resPP = resultsPP.getResultsPP(matrix).executionTimePairwise + step;
 
       // Додаємо часи в масив відповідного алгоритму
+
       execTimesGreedy.push(resGreedy);
       execTimesBnB.push(resBnB);
       execTimesPP.push(resPP);
