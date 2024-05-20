@@ -1,13 +1,12 @@
 import * as results from '../algorithms/branchBound/bnbResults.js';
 import * as Generator from '../generator/taskGenerator.js';
 
-import asciichart from 'asciichart';
-
 // Вхідні дані
 const numOfStudents = 8;
 const tau = 100;
 const deltaTauMassive = [10, 50];
 
+// Обчислення ЦФ для різних ∆τ
 function testBnb(numOfStudents, tau, deltaTauMassive) {
   let targetFunctions = [];
   const trainingDuration = Generator.generateLessonDuration(numOfStudents);
@@ -69,14 +68,14 @@ function drawChart(deltaTauMassive, targetFunctions, htmlElement) {
           beginAtZero: true,
           title: {
             display: true,
-            text: '∆τ',
+            text: 'Значення напівінтервалу ∆τ',
           },
         },
         y: {
           beginAtZero: true,
           title: {
             display: true,
-            text: 'ЦФ',
+            text: 'Цільова Функція',
           },
         },
       },
