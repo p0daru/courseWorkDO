@@ -1,6 +1,7 @@
 // Kovalenko Kateryna
 import * as Generator from '../../generator/taskGenerator.js';
-export function ant_console(n, t_matrix, alpha) {
+
+export function ant_console(n, t_matrix, alpha = 1) {
   // Вимірювання часу виконання алгоритму
   const startTime = performance.now();
   // Параметри алгоритму

@@ -14,19 +14,13 @@ const data = timeTest(numOfStudents, tau, deltaTau);
 drawTimeChart(data, 'timeTest'); // вивід гістограм
 
 // середні часи для відображення в консолі
-let { averageTimesGreedy, averageTimesAnt, averageTimesBnB, averageTimesPP } =
-  timeTest(numOfStudents, tau, deltaTau);
+// let { averageTimesGreedy, averageTimesAnt, averageTimesBnB, averageTimesPP } =
+//   timeTest(numOfStudents, tau, deltaTau);
 
-console.log('averageTimesGreedy – ', averageTimesGreedy);
-console.log('averageTimesAnt – ', averageTimesAnt);
-console.log('averageTimesBnB – ', averageTimesBnB);
-console.log('averageTimesPP – ', averageTimesPP);
-
-// console.log([
-//   0.0028103500000007386, 0.002972900000001033, 0.004435449999999008,
-//   0.003060350000001222, 0.004820950000004131, 0.0057521000000008374,
-//   0.006731249999998567, 0.00821250000000191, 0.009808300000005942,
-// ]);
+// console.log('averageTimesGreedy – ', averageTimesGreedy);
+// console.log('averageTimesAnt – ', averageTimesAnt);
+// console.log('averageTimesBnB – ', averageTimesBnB);
+// console.log('averageTimesPP – ', averageTimesPP);
 
 // Тестування
 function timeTest(numOfStudents, tau, deltaTau) {
@@ -59,7 +53,8 @@ function timeTest(numOfStudents, tau, deltaTau) {
       const resGreedy =
         resultsGreedy.getGreedyResults(matrix).executionTimeGreedy + step;
       // мурахи
-      const resAnt = resultsAnt.ant(numOfStudents, matrix).executionTime + step;
+      const resAnt =
+        resultsAnt.ant(numOfStudents[i], matrix).executionTime + step;
       // МГтМ
       const resBnB =
         resultsBnB.calcResultsBnB(matrix, trainingDuration).executionTimeBnB +
