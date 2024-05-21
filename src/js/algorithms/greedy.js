@@ -59,7 +59,6 @@ export function greedySchedule(matrix) {
 
 // Additional function for the timeTest
 export function getGreedyResults(matrix) {
-  // Початок вимірювання часу
   const startTime = performance.now();
 
   let numOfStudents = matrix.length;
@@ -79,7 +78,6 @@ export function getGreedyResults(matrix) {
     current = next;
   }
 
-  // Завершення вимірювання часу та виведення результату
   const endTime = performance.now();
   const executionTimeGreedy = endTime - startTime;
 
@@ -89,6 +87,10 @@ export function getGreedyResults(matrix) {
   };
 }
 
-// const matrix = Generator.generateMatrix(8, 50, 10);
-// let { executionTimeGreedy } = getGreedyResults(matrix);
-// console.log(executionTimeGreedy);
+export function calculateTotalPreparationTime(matrix, schedule) {
+  let total = 0;
+  for (let i = 0; i < schedule.length - 1; i++) {
+    total += matrix[schedule[i]][schedule[i + 1]];
+  }
+  return total;
+}
