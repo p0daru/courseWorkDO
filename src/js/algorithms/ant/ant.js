@@ -1,14 +1,6 @@
 // Kovalenko Kateryna
-
 import * as Generator from '../../generator/taskGenerator.js';
 export function ant(n, t_matrix, alpha) {
-    // Вимірювання часу виконання алгоритму
-    const startTime = performance.now();
-
-import { generateMatrix } from '../../generator/taskGenerator.js';
-
-
-export function ant(n, t_matrix, alpha = 1) {
   // Вимірювання часу виконання алгоритму
   const startTime = performance.now();
 
@@ -18,9 +10,6 @@ export function ant(n, t_matrix, alpha = 1) {
   let tay_0 = 0.7;
   let p = 0.1;
 
-    let t_use = t_matrix.slice().map(row => row.slice());
-    //Матриця тривалостей уроків
-    let less_matrix = Generator.generateLessonDuration(n);
   ///
   let tay_matrix = [];
   let lMax = 10;
@@ -28,6 +17,8 @@ export function ant(n, t_matrix, alpha = 1) {
   let result_func;
 
   let t_use = t_matrix.slice().map(row => row.slice());
+  //Матриця тривалостей уроків
+  let less_matrix = Generator.generateLessonDuration(n);
 
   // Зведення матриці переналаштувань
 
@@ -117,13 +108,6 @@ export function ant(n, t_matrix, alpha = 1) {
             parseFloat(tay_matrix[student][i] ** alpha) *
             (1 / t_matrix[student][i]) ** beta;
         }
-
-        // Обчислення ЦФ :
-        for (let i = 0; i < result_it.length - 1; i++) {
-            const currentStudent = result_it[i];
-            const nextStudent = result_it[i + 1];
-            result_it_func += parseFloat(t_matrix[currentStudent][nextStudent]) + less_matrix[i];
-            visited_array[currentStudent][nextStudent] = 1;
       }
       for (let i = 0; i < n; i++) {
         let it = 0;
@@ -156,7 +140,8 @@ export function ant(n, t_matrix, alpha = 1) {
     for (let i = 0; i < result_it.length - 1; i++) {
       const currentStudent = result_it[i];
       const nextStudent = result_it[i + 1];
-      result_it_func += parseFloat(t_matrix[currentStudent][nextStudent]);
+      result_it_func +=
+        parseFloat(t_matrix[currentStudent][nextStudent]) + less_matrix[i];
       visited_array[currentStudent][nextStudent] = 1;
     }
 
@@ -184,23 +169,13 @@ export function ant(n, t_matrix, alpha = 1) {
       result = result_it;
       result_func = result_it_func;
     }
-
-    //////
-    const endTime = performance.now();
-    const executionTime = endTime - startTime;
-    console.log("Розклад: ", result);
-    console.log("Значення ЦФ: ", result_func);
-    console.log("ExecutionTime: ", executionTime);
-
-
-
   }
-
-  console.log('Розклад: ', result);
-  console.log('Значення ЦФ: ', result_func);
   //////
   const endTime = performance.now();
   const executionTime = endTime - startTime;
+  console.log('Розклад: ', result);
+  console.log('Значення ЦФ: ', result_func);
+  console.log('ExecutionTime: ', executionTime);
 
   return { result, result_func, executionTime };
 }
