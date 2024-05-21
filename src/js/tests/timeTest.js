@@ -1,5 +1,6 @@
 import * as Generator from '../generator/taskGenerator.js';
 import * as resultsGreedy from '../algorithms/greedy.js';
+import * as resultsAnt from '../algorithms/ant/ant.js';
 import * as resultsBnB from '../algorithms/branchBound/bnbResults.js';
 import * as resultsPP from '../algorithms/pairwisePermut.js';
 
@@ -52,25 +53,27 @@ function timeTest(numOfStudents, tau, deltaTau) {
       const matrix = Generator.generateMatrix(numOfStudents[i], tau, deltaTau);
 
       // Обчислюємо роботи алгоритмів
+      const step = 0.1;
+
       // жадібний
       const resGreedy =
-        resultsGreedy.getGreedyResults(matrix).executionTimeGreedy;
+        resultsGreedy.getGreedyResults(matrix).executionTimeGreedy + step;
       // мурахи
-      //   const resAnt = resultsPP.getResultsPP(matrix).executionTimePairwise;
+      const resAnt = resultsAnt.ant(numOfStudents, matrix).executionTime + step;
       // МГтМ
-      const resBnB = resultsBnB.calcResultsBnB(
-        matrix,
-        trainingDuration
-      ).executionTimeBnB;
+      const resBnB =
+        resultsBnB.calcResultsBnB(matrix, trainingDuration).executionTimeBnB +
+        step;
 
       // перестановки
-      const resPP = resultsPP.getResultsPP(matrix).executionTimePairwise;
+      const resPP = resultsPP.getResultsPP(matrix).executionTimePairwise + step;
 
       // Додаємо часи в масив відповідного алгоритму
+
       execTimesGreedy.push(resGreedy);
       execTimesBnB.push(resBnB);
       execTimesPP.push(resPP);
-      execTimesAnt.push(resPP);
+      execTimesAnt.push(resAnt);
     }
 
     // Обчислюємо середні часи та додаємо до масиву відповідного алгоритму
