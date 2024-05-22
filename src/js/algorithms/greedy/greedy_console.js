@@ -1,12 +1,17 @@
 import { generateMatrix, generateLessonDuration } from '../../generator/taskGenerator.js';
-import { greedySchedule, calculateTotalPreparationTime, getGreedyResults } from './greedy.js';
+import { greedySchedule, calculateTotalPreparationTime, formatSchedule } from './greedy.js';
+
+// Function to get the student label
+function getStudentLabel(index) {
+  return index % 2 === 0 ? `b${Math.floor(index / 2) + 1}` : `g${Math.floor(index / 2) + 1}`;
+}
 
 function findNearestNeighborWithLogging(matrix, current, visited) {
   let nearest = -1;
   let minDistance = Infinity;
 
-  console.log(`Поточний учень: ${current}`);
-  console.log('Відвідано:', Array.from(visited));
+  console.log(`Поточний учень: ${getStudentLabel(current)}`);
+  console.log('Відвідано:', Array.from(visited).map(getStudentLabel));
   console.log('Тривалості перерв:', matrix[current]);
 
   for (let i = 0; i < matrix.length; i++) {
@@ -16,7 +21,7 @@ function findNearestNeighborWithLogging(matrix, current, visited) {
     }
   }
 
-  console.log(`Наступний учень: ${nearest} (тривалість перерви: ${minDistance})\n`);
+  console.log(`Наступний учень: ${getStudentLabel(nearest)} (тривалість перерви: ${minDistance})\n`);
   return nearest;
 }
 
@@ -25,11 +30,11 @@ function greedyScheduleWithLogging(matrix) {
   let visited = new Set();
   let schedule = [];
 
-  let current = Math.floor(Math.random() * numOfStudents);
+  let current = 0; // Start with the first student as a boy
   schedule.push(current);
   visited.add(current);
 
-  console.log(`Перший учень: ${current}`);
+  console.log(`Перший учень: ${getStudentLabel(current)}`);
 
   while (schedule.length < numOfStudents) {
     let next = findNearestNeighborWithLogging(matrix, current, visited);
@@ -63,7 +68,7 @@ export function greedyConsole(numOfStudents, tau, deltaTau) {
   const endTime = performance.now();
   const executionTimeGreedy = endTime - startTime;
 
-  console.log('Розклад: ', schedule);
+  console.log('Розклад: ', schedule.map(getStudentLabel).join(' -> '));
   console.log('Тривалість перерв: ', totalPreparationTime);
   console.log('Загальний час підготовки: ', totalTF);
   console.log('Час виконання жадібного алгоритму: ', executionTimeGreedy, 'ms');

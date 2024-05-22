@@ -1,6 +1,11 @@
 import { generateMatrix, generateLessonDuration } from '../../generator/taskGenerator.js';
-import { greedySchedule, calculateTotalPreparationTime } from '../greedy/greedy.js';
+import { greedySchedule, calculateTotalPreparationTime, formatSchedule } from '../greedy/greedy.js';
 import { getResultsPP } from './pairwisePermut.js';
+
+// Function to get the student label
+function getStudentLabel(index) {
+  return index % 2 === 0 ? `b${Math.floor(index / 2) + 1}` : `g${Math.floor(index / 2) + 1}`;
+}
 
 function swapPairsWithLogging(schedule, numOfStudents) {
   let newSchedule = schedule.slice();
@@ -19,13 +24,11 @@ function swapPairsWithLogging(schedule, numOfStudents) {
     index2 = candidates[Math.floor(Math.random() * candidates.length)];
   }
 
-  console.log(`Swapping student ${index1} with student ${index2}`);
-
   let temp = newSchedule[index1];
   newSchedule[index1] = newSchedule[index2];
   newSchedule[index2] = temp;
 
-  return newSchedule;
+  return { newSchedule, index1, index2 };
 }
 
 function optimizeScheduleWithLogging(matrix, initialSchedule, maxIterations) {
@@ -33,25 +36,39 @@ function optimizeScheduleWithLogging(matrix, initialSchedule, maxIterations) {
   let bestSchedule = schedule;
   let bestTime = calculateTotalPreparationTime(matrix, schedule);
   let foundImprovement = false;
+  let i = 0;
 
-  for (let i = 0; i < maxIterations; i++) {
-    let newSchedule = swapPairsWithLogging(schedule, schedule.length);
+  for (; i < maxIterations; i++) {
+    let { newSchedule, index1, index2 } = swapPairsWithLogging(schedule, schedule.length);
     let newTime = calculateTotalPreparationTime(matrix, newSchedule);
 
     if (newTime < bestTime) {
       bestTime = newTime;
       bestSchedule = newSchedule;
-      console.log(`ІТЕРАЦІЯ ${i + 1}: Best time = ${bestTime}`);
+      console.log(`ІТЕРАЦІЯ ${i + 1}: Перестановка студента ${getStudentLabel(index1)} та студента ${getStudentLabel(index2)}, Найкраща поточна ЦФ = ${bestTime}`);
       foundImprovement = true;
       break;
     }
 
-    console.log(`ІТЕРАЦІЯ ${i + 1}: Best time = ${bestTime}`);
+    console.log(`ІТЕРАЦІЯ ${i + 1}: Перестановка студента ${getStudentLabel(index1)} та студента ${getStudentLabel(index2)}, Best time = ${bestTime}`);
     schedule = newSchedule;
   }
 
   if (foundImprovement) {
     console.log('REST OF ITERATIONS');
+  }
+
+  // Continue with the rest of the iterations without logging
+  for (let j = i + 1; j < maxIterations; j++) {
+    let { newSchedule, index1, index2 } = swapPairsWithLogging(schedule, schedule.length);
+    let newTime = calculateTotalPreparationTime(matrix, newSchedule);
+
+    if (newTime < bestTime) {
+      bestTime = newTime;
+      bestSchedule = newSchedule;
+    }
+
+    schedule = newSchedule;
   }
 
   console.log(`Final best time after ${maxIterations} iterations: ${bestTime}`);
@@ -69,7 +86,7 @@ export function pairwiseConsole(numOfStudents, tau, deltaTau, maxIterations = 10
   console.table(matrix);
 
   const initialSchedule = greedySchedule(matrix);
-  console.log('Initial greedy schedule:', initialSchedule);
+  console.log('Initial greedy schedule:', formatSchedule(initialSchedule));
 
   const startTime = performance.now();
 
@@ -80,7 +97,7 @@ export function pairwiseConsole(numOfStudents, tau, deltaTau, maxIterations = 10
   const endTime = performance.now();
   const executionTimePairwise = endTime - startTime;
 
-  console.log('Best schedule:', bestSchedule);
+  console.log('Best schedule:', formatSchedule(bestSchedule));
   console.log('Best preparation time:', bestTime);
   console.log('Total preparation time:', totalTF);
   console.log('Execution time of pairwise algorithm:', executionTimePairwise, 'ms');

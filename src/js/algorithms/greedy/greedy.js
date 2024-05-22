@@ -72,3 +72,8 @@ export function calculateTotalPreparationTime(matrix, schedule) {
   }
   return total;
 }
+
+// Function to format the schedule
+export function formatSchedule(schedule) {
+  return schedule.map((student, index) => `${index % 2 === 0 ? 'b' : 'g'}${student + 1}`).join(' -> ');
+}
