@@ -33,7 +33,7 @@ function deviationTest(numOfStudents, tau, deltaTau) {
             let P = generateMatrix(n, tau, deltaTau);
 
             // Розв’язати задачу P методом попарних перестановок, де початкова задача P визначена мурашиним алгоритмом
-            let { result: antSchedule, result_func: antTF } = ant(n, P, 1);
+            let { result: antSchedule, result_func: antTF } = ant(n, P);
 
             // Розв’язати задачу P методом попарних перестановок, де початкова задача P визначена жадібним алгоритмом
             let { schedule: greedySchedule } = getGreedyResults(P);
@@ -88,8 +88,7 @@ function drawDeviationChart(data, htmlElement) {
         type: 'bar',
         data: {
             labels: data.labels,
-            datasets: [
-                {
+            datasets: [{
                     label: 'Відхилення від ЦФ мурашиного алгоритму',
                     data: data.averageDeviationsFromAnt,
                     backgroundColor: 'rgb(96, 130, 182)',
@@ -117,7 +116,7 @@ function drawDeviationChart(data, htmlElement) {
                 },
                 tooltip: {
                     callbacks: {
-                        label: function (context) {
+                        label: function(context) {
                             return `Середнє відхилення: ${context.raw}`;
                         },
                     },
