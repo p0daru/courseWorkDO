@@ -60,7 +60,7 @@ const taskGenerator = {
  * @param {boolean} [checkTauDeltaTau=false] - Флаг для перевірки tau та deltaTau.
  * @throws {Error} - Якщо неправильні вхідні дані.
  */
-function validateInputs(
+export function validateInputs(
   numOfStudents,
   tau,
   deltaTau,
