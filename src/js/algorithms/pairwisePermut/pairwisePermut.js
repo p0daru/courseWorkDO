@@ -1,4 +1,5 @@
-import { generateMatrix, greedySchedule, calculateTotalPreparationTime } from './greedy.js';
+import { generateMatrix } from '../../generator/taskGenerator.js';
+import { greedySchedule, calculateTotalPreparationTime } from '../greedy/greedy.js';
 
 function swapPairs(schedule, numOfStudents) {
   let newSchedule = schedule.slice();

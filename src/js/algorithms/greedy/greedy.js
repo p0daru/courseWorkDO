@@ -1,26 +1,4 @@
-import * as Generator from '../generator/taskGenerator.js';
-
-export function generateMatrix(numOfStudents, tau, deltaTau) {
-  let matrix = [];
-
-  for (let i = 0; i < numOfStudents; i += 1) {
-    matrix[i] = [];
-
-    for (let j = 0; j < numOfStudents; j += 1) {
-      if (i % 2 === j % 2) {
-        matrix[i][j] = Infinity;
-        continue;
-      }
-
-      let minVal = tau - deltaTau;
-      let maxVal = tau + deltaTau;
-
-      matrix[i][j] = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
-    }
-  }
-
-  return matrix;
-}
+import { generateMatrix } from '../../generator/taskGenerator.js';
 
 function findNearestNeighbor(matrix, current, visited) {
   let nearest = -1;
