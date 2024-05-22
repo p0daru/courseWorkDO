@@ -32,54 +32,110 @@ async function menu() {
   console.log('3. Завершити роботу');
 
   let option = await askQuestion('Ввести опцію: ');
-  console.log('Ви обрали опцію ', option);
+  option = Number(option); // Number перетворює рядок введений юзером у число
   console.log('==========================');
 
   switch (option) {
-    case '1':
+    case 1:
       await new Promise(resolve => setTimeout(resolve, 1000)); // Пауза на 1 sec
-      console.clear();
+      console.clear(); // очистити консоль
+      console.log('==========================');
       console.log('Оберіть спосіб генерування задачі');
       console.log('1. Згенерувати випадковим чином');
       console.log('2. Скористатись дефолтними вхідними даними');
 
       // зчитання способу генерування від юзера
       let optionToGenerate = await askQuestion('Ввести опцію: ');
+      console.log('==========================');
+      optionToGenerate = Number(optionToGenerate);
 
-      if (optionToGenerate === '1') {
+      if (optionToGenerate === 1) {
         // випадково
         console.log('\nВведіть вхідні дані');
 
-        let numOfStudents = await askQuestion('Розмірність задачі: ');
-        let tau = await askQuestion('Значення математичного сподівання: ');
-        let deltaTau = await askQuestion('Значення напівінтервалу: ');
+        // Number перетворює рядок введений юзером у число
+        let numOfStudents = Number(await askQuestion('Розмірність задачі: '));
+        let tau = Number(
+          await askQuestion('Значення математичного сподівання: ')
+        );
+        let deltaTau = Number(await askQuestion('Значення напівінтервалу: '));
 
         ///// додати норм логіку валідації вхідних даних (в циклі для повторної спроби введення ??)
+
         const trainingDuration =
           Generator.generateLessonDuration(numOfStudents);
         const matrix = Generator.generateMatrix(numOfStudents, tau, deltaTau);
 
-        // let res = results.calcResultsBnB(matrix, trainingDuration);
-        // targetFunctions.push(res.totalWorkTimeBnB);
-      } else if (optionToGenerate === '2') {
+        // результати роботи алгоритмів
+        let resultsBranchBound = resultsBnB.calcResultsBnB(
+          matrix,
+          trainingDuration
+        );
+
+        console.log('\nРозв`язок задачі всіма алгоритмами');
+        console.log('==============================');
+
+        console.log(
+          `Результат роботи алгоритму гілок та меж: ${resultsBranchBound.scheduleBnB}; значення ЦФ: ${resultsBranchBound.totalWorkTimeBnB}`
+        );
+        // console.log(
+        //   `Результат роботи жадібного алгоритму: ${resultsBranchBound.scheduleBnB}; значення ЦФ: ${resultsBranchBound.totalWorkTimeBnB}`
+        // );
+        // console.log(
+        //   `Результат роботи мурашиного алгоритму: ${resultsBranchBound.scheduleBnB}; значення ЦФ: ${resultsBranchBound.totalWorkTimeBnB}`
+        // );
+        // console.log(
+        //   `Результат роботи алгоритму попарних перестановок: ${resultsBranchBound.scheduleBnB}; значення ЦФ: ${resultsBranchBound.totalWorkTimeBnB}`
+        // );
+
+        console.log('==============================');
+      } else if (optionToGenerate === 2) {
         // дефолтна матриця
         console.log('Скористатись дефолтними вхідними даними');
+
+        const trainingDuration =
+          Generator.getDefaultInputValues().trainingDuration;
+        const matrix = Generator.getDefaultInputValues().matrix;
+
+        // результати роботи алгоритмів
+        let resultsBranchBound = resultsBnB.calcResultsBnB(
+          matrix,
+          trainingDuration
+        );
+
+        console.log('\nРозв`язок задачі всіма алгоритмами');
+        console.log('==============================');
+
+        console.log(
+          `Результат роботи алгоритму гілок та меж: ${resultsBranchBound.scheduleBnB}; значення ЦФ: ${resultsBranchBound.totalWorkTimeBnB}`
+        );
+        // console.log(
+        //   `Результат роботи жадібного алгоритму: ${resultsBranchBound.scheduleBnB}; значення ЦФ: ${resultsBranchBound.totalWorkTimeBnB}`
+        // );
+        // console.log(
+        //   `Результат роботи мурашиного алгоритму: ${resultsBranchBound.scheduleBnB}; значення ЦФ: ${resultsBranchBound.totalWorkTimeBnB}`
+        // );
+        // console.log(
+        //   `Результат роботи алгоритму попарних перестановок: ${resultsBranchBound.scheduleBnB}; значення ЦФ: ${resultsBranchBound.totalWorkTimeBnB}`
+        // );
+
+        console.log('==============================');
       } else {
         console.log('Некоректний вибір. Спробуйте ще раз.');
       }
       break;
 
-    case '2':
+    case 2:
       console.log('Провести експерименти');
       console.log('Обрати експеримент');
       //  логіка для експериментів
       break;
 
-    case '3':
+    case 3:
       console.log('Вивести дані задачі');
       break;
 
-    case '4':
+    case 4:
       console.log('Завершити роботу');
       break;
 

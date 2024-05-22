@@ -50,6 +50,26 @@ const taskGenerator = {
 
     return times;
   },
+
+  // Отримати дефолтні вхідні дані
+  getDefaultInputValues: function () {
+    // матриця переналаштувань
+    let matrix = [
+      [Infinity, 15, Infinity, 20, Infinity, 5, Infinity, 10],
+      [5, Infinity, 15, Infinity, 5, Infinity, 10, Infinity],
+      [Infinity, 20, Infinity, 15, Infinity, 5, Infinity, 5],
+      [10, Infinity, 20, Infinity, 5, Infinity, 10, Infinity],
+      [Infinity, 15, Infinity, 15, Infinity, 5, Infinity, 5],
+      [10, Infinity, 15, Infinity, 10, Infinity, 10, Infinity],
+      [Infinity, 20, Infinity, 20, Infinity, 10, Infinity, 5],
+      [5, Infinity, 15, Infinity, 5, Infinity, 5, Infinity],
+    ];
+
+    // тривалість занять
+    let trainingDuration = [40, 120, 90, 90, 60, 50, 60, 40];
+
+    return { matrix, trainingDuration };
+  },
 };
 
 /**
@@ -99,6 +119,7 @@ export function validateInputs(
 // Експорт функцій
 export const generateMatrix = taskGenerator.generateMatrix;
 export const generateLessonDuration = taskGenerator.generateLessonDuration;
+export const getDefaultInputValues = taskGenerator.getDefaultInputValues;
 
 //===== Test case 2 ====//
 // export function generateMatrix(numOfStudents, tau, deltaTau) {
