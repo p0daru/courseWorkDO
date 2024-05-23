@@ -1,8 +1,8 @@
 import * as Generator from '../generator/taskGenerator.js';
-import * as resultsGreedy from '../algorithms/greedy.js';
+import * as resultsGreedy from '../algorithms/greedy/greedy.js';
 import * as resultsAnt from '../algorithms/ant/ant.js';
 import * as resultsBnB from '../algorithms/branchBound/bnbResults.js';
-import * as resultsPP from '../algorithms/pairwisePermut.js';
+import * as resultsPP from '../algorithms/pairwisePermut/pairwisePermut.js';
 
 // Вхідні дані
 const numOfStudents = [4, 6, 8, 10, 12, 14, 16, 18, 20]; // розмірність задачі
