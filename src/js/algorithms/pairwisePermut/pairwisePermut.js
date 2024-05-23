@@ -48,7 +48,7 @@ function optimizeSchedule(matrix, initialSchedule, maxIterations) {
 // Additional func for the timeTest
 export function getResultsPP(
   matrix,
-  initialSchedule = greedySchedule(matrix),
+  initialSchedule,
   maxIterations = 1000
 ) {
   const startTime = performance.now();
@@ -71,6 +71,9 @@ export function getResultsPP(
 
   const endTime = performance.now();
   const executionTimePairwise = endTime - startTime;
+
+  console.log(`Pairwise Permutation Schedule: ${bestSchedule}`);
+  console.log(`Pairwise Permutation TF: ${bestTime}`);
 
   return { bestSchedule, bestTime, executionTimePairwise };
 }

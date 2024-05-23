@@ -1,85 +1,73 @@
 import * as Generator from '../generator/taskGenerator.js';
-import * as resultsGreedy from '../algorithms/greedy/greedy.js';
-import * as resultsAnt from '../algorithms/ant/ant.js';
-import * as resultsBnB from '../algorithms/branchBound/bnbResults.js';
-import * as resultsPP from '../algorithms/pairwisePermut/pairwisePermut.js';
+import { getGreedyResults } from '../algorithms/greedy/greedy.js';
+import { ant } from '../algorithms/ant/ant.js';
+import { calcResultsBnB } from '../algorithms/branchBound/bnbResults.js';
+import { getResultsPP } from '../algorithms/pairwisePermut/pairwisePermut.js';
 
-// Вхідні дані
-const numOfStudents = [4, 6, 8, 10, 12, 14, 16, 18, 20]; // розмірність задачі
-const tau = 100; // значення математичного сподівання
-const deltaTau = 10; // значення напівінтервалу
+// Input data
+const numOfStudents = [4, 6, 8, 10, 12, 14, 16, 18, 20]; // problem size
+const tau = 100; // mean value
+const deltaTau = 10; // semi-interval value
 
-// Приклад виклику функції
+// Example function call
 const data = timeTest(numOfStudents, tau, deltaTau);
-drawTimeChart(data, 'timeTest'); // вивід гістограм
+drawTimeChart(data, 'timeTest'); // draw histograms
 
-// середні часи для відображення в консолі
-// let { averageTimesGreedy, averageTimesAnt, averageTimesBnB, averageTimesPP } =
-//   timeTest(numOfStudents, tau, deltaTau);
-
-// console.log('averageTimesGreedy – ', averageTimesGreedy);
-// console.log('averageTimesAnt – ', averageTimesAnt);
-// console.log('averageTimesBnB – ', averageTimesBnB);
-// console.log('averageTimesPP – ', averageTimesPP);
-
-// Тестування
+// Testing
 function timeTest(numOfStudents, tau, deltaTau) {
-  // Часи виконання алгоритмів та середні часи виконання алгоритмів
+  // Execution times and average execution times of the algorithms
   let averageTimesGreedy = [];
   let averageTimesAnt = [];
   let averageTimesBnB = [];
   let averageTimesPP = [];
 
-  for (let i = 0; i < numOfStudents.length; i += 1) {
-    // 20 прогонів
+  for (let i = 0; i < numOfStudents.length; i++) {
+    // 20 runs
     let execTimesGreedy = [];
     let execTimesAnt = [];
     let execTimesBnB = [];
     let execTimesPP = [];
 
-    for (let j = 0; j < 20; j += 1) {
-      // Генеруємо тривалості уроків та матрицю переналаштувань
-      const trainingDuration = Generator.generateLessonDuration(
-        numOfStudents[i],
-        tau,
-        deltaTau
-      );
+    for (let j = 0; j < 20; j++) {
+      // Generate lesson durations and transition matrix
+      const trainingDuration = Generator.generateLessonDuration(numOfStudents[i], tau, deltaTau);
       const matrix = Generator.generateMatrix(numOfStudents[i], tau, deltaTau);
 
-      // Обчислюємо роботи алгоритмів
+      // Calculate algorithm executions
       const step = 0.1;
 
-      // жадібний
-      const resGreedy =
-        resultsGreedy.getGreedyResults(matrix).executionTimeGreedy + step;
-      // мурахи
-      const resAnt =
-        resultsAnt.ant(numOfStudents[i], matrix).executionTime + step;
-      // МГтМ
-      const resBnB =
-        resultsBnB.calcResultsBnB(matrix, trainingDuration).executionTimeBnB +
-        step;
+      // Greedy
+      const resGreedy = getGreedyResults(matrix);
+      const execTimeGreedy = resGreedy.executionTimeGreedy + step;
 
-      // перестановки
-      const resPP = resultsPP.getResultsPP(matrix).executionTimePairwise + step;
+      // Ant
+      const resAnt = ant(numOfStudents[i], matrix);
+      const execTimeAnt = resAnt.executionTime + step;
 
-      // Додаємо часи в масив відповідного алгоритму
+      // BnB
+      const resBnB = calcResultsBnB(matrix, trainingDuration);
+      const execTimeBnB = resBnB.executionTimeBnB + step;
 
-      execTimesGreedy.push(resGreedy);
-      execTimesBnB.push(resBnB);
-      execTimesPP.push(resPP);
-      execTimesAnt.push(resAnt);
+      // Pairwise
+      const resPP = getResultsPP(matrix, resGreedy.schedule);
+      const execTimePP = resPP.executionTimePairwise + step;
+
+      // Add times to the corresponding algorithm array
+      execTimesGreedy.push(execTimeGreedy);
+      execTimesAnt.push(execTimeAnt);
+      execTimesBnB.push(execTimeBnB);
+      execTimesPP.push(execTimePP);
     }
 
-    // Обчислюємо середні часи та додаємо до масиву відповідного алгоритму
+    // Calculate average times and add to the corresponding algorithm array
     averageTimesGreedy.push(calculateAverage(execTimesGreedy));
+    averageTimesAnt.push(calculateAverage(execTimesAnt));
     averageTimesBnB.push(calculateAverage(execTimesBnB));
     averageTimesPP.push(calculateAverage(execTimesPP));
-    averageTimesAnt.push(calculateAverage(execTimesAnt));
   }
 
   return {
-    labels: numOfStudents, // мітки графіка по горизонталі
+    labels: numOfStudents, // horizontal axis labels
     averageTimesGreedy,
     averageTimesAnt,
     averageTimesBnB,
@@ -87,7 +75,7 @@ function timeTest(numOfStudents, tau, deltaTau) {
   };
 }
 
-// Виводимо гістограми
+// Draw histograms
 function drawTimeChart(data, htmlElement) {
   const ctx = document.getElementById(htmlElement).getContext('2d');
 
@@ -153,7 +141,7 @@ function drawTimeChart(data, htmlElement) {
           },
         },
         y: {
-          beginAtZero: false,
+          beginAtZero: true,
           title: {
             display: true,
             text: 'Average Execution Time (ms)',
@@ -167,10 +155,10 @@ function drawTimeChart(data, htmlElement) {
   });
 }
 
-// Обчислити середнє значення масиву
+// Calculate the average value of an array
 function calculateAverage(arr) {
   if (arr.length === 0) {
-    return 0; // Повертаємо 0, якщо масив пустий
+    return 0; // Return 0 if the array is empty
   }
 
   let sum = 0;
@@ -180,165 +168,3 @@ function calculateAverage(arr) {
 
   return sum / arr.length;
 }
-
-///////// OTHER
-// function drawTimeChart(averageTimesGreedy, labels, htmlElement) {
-//   const ctx = document.getElementById(htmlElement).getContext('2d');
-//   new Chart(ctx, {
-//     type: 'bar',
-//     data: {
-//       labels: labels,
-//       datasets: [
-//         {
-//           label: 'Greedy',
-//           data: averageTimesGreedy,
-//           backgroundColor: 'rgb(96, 130, 182)',
-//           borderColor: 'rgba(70, 130, 180, 1)',
-//           borderWidth: 0,
-//         },
-//       ],
-//     },
-//     options: {
-//       scales: {
-//         y: {
-//           beginAtZero: true,
-//         },
-//       },
-//     },
-//   });
-// }
-
-// function drawTimeChart(data, htmlElement) {
-//   const ctx = document.getElementById(htmlElement).getContext('2d');
-//   new Chart(ctx, {
-//     type: 'bar',
-//     data: {
-//       labels: data.averageTimesGreedy, // Горизонтальна вісь: час виконання
-//       datasets: [
-//         {
-//           label: 'Greedy',
-//           data: data.labels, // Вертикальна вісь: кількість студентів
-//           backgroundColor: 'rgb(96, 130, 182)',
-//           borderColor: 'rgba(70, 130, 180, 1)',
-//           borderWidth: 0,
-//         },
-//         {
-//           label: 'Ant',
-//           data: data.averageTimesAnt,
-//           backgroundColor: 'rgb(182, 96, 130)',
-//           borderColor: 'rgba(180, 70, 130, 1)',
-//           borderWidth: 0,
-//         },
-//         {
-//           label: 'BnB',
-//           data: data.averageTimesBnB,
-//           backgroundColor: 'rgb(96, 182, 130)',
-//           borderColor: 'rgba(70, 180, 130, 1)',
-//           borderWidth: 0,
-//         },
-//         {
-//           label: 'Pairwise',
-//           data: data.averageTimesPairwise,
-//           backgroundColor: 'rgb(130, 96, 182)',
-//           borderColor: 'rgba(130, 70, 180, 1)',
-//           borderWidth: 0,
-//         },
-//       ],
-//     },
-//     options: {
-//       responsive: true,
-//       plugins: {
-//         legend: {
-//           position: 'top',
-//         },
-//         title: {
-//           display: true,
-//           text: 'Average Execution Time vs Number of Students',
-//         },
-//         tooltip: {
-//           callbacks: {
-//             label: function (context) {
-//               return `Average Execution Time: ${context.raw}`;
-//             },
-//           },
-//         },
-//       },
-//       scales: {
-//         x: {
-//           beginAtZero: true,
-//           title: {
-//             display: true,
-//             text: 'Average Execution Time',
-//           },
-//         },
-//         y: {
-//           beginAtZero: true,
-//           title: {
-//             display: true,
-//             text: 'Number of Students (n)',
-//           },
-//         },
-//       },
-//       layout: {
-//         backgroundColor: 'rgba(211, 211, 211, 1)',
-//       },
-//     },
-//   });
-// }
-
-/**
- * Результати:
- * для різних ен виводимо середній час роботи одного і того ж алгоритма
- */
-
-// function timeTest(numOfStudents, tau, deltaTau) {
-//   // Часи виконання алгоритмів
-//   let execTimeGreedy = [];
-//   let execTimeAnt = [];
-//   let execTimeBnB = [];
-//   let execTimePairwise = [];
-
-//   // Середні часи виконання алгоритмів
-//   let aveTimeGreedy = [];
-//   let aveTimeAnt = [];
-//   let aveTimeBnB = [];
-//   let aveTimePairwise = [];
-
-//   let execTimes = [];
-//   let aveTimes = [];
-
-//   for (let i = 0; i < numOfStudents.length; i += 1) {
-//     execTimeGreedy = [];
-//     execTimeAnt = [];
-//     execTimeBnB = [];
-//     execTimePairwise = [];
-
-//     // 20 прогонів
-//     for (let j = 0; j < 20; j += 1) {
-//       // Генеруємо тривалості уроків
-//       const trainingDuration = Generator.generateLessonDuration(
-//         numOfStudents[i],
-//         tau,
-//         deltaTau
-//       );
-
-//       // Генеруємо матрицю переналаштувань
-//       const matrix = Generator.generateMatrix(numOfStudents[i], tau, deltaTau);
-
-//       // Обчислюємо роботи алгоритмів
-//       let resBnB = resultsBnB.calcResultsBnB(matrix, trainingDuration);
-
-//       // Додаємо часи в масив відповідного алгоритму
-//       execTimeBnB.push(resBnB.executionTimeBnB);
-//     }
-
-//     const averageTimeBnB = average(execTimeBnB);
-//     // Округлення до двох знаків після коми
-//     aveTimeBnB.push(parseFloat(averageTimeBnB.toFixed(2)));
-//   }
-
-//   aveTimes.push(aveTimeGreedy, aveTimeAnt, aveTimeBnB, aveTimePairwise);
-//   execTimes.push(execTimeGreedy, execTimeAnt, execTimeBnB, execTimePairwise);
-
-//   return { execTimes, aveTimes };
-// }

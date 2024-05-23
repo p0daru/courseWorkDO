@@ -1,25 +1,26 @@
-import { generateMatrix, getGreedyResults, calculateTotalPreparationTime } from '../algorithms/greedy.js';
-import { getResultsPP } from '../algorithms/pairwisePermut.js';
+import { generateMatrix } from '../generator/taskGenerator.js';
+import { getGreedyResults, calculateTotalPreparationTime } from '../algorithms/greedy/greedy.js';
+import { getResultsPP } from '../algorithms/pairwisePermut/pairwisePermut.js';
 import { ant } from '../algorithms/ant/ant.js';
 
-// Параметри
-const numOfStudents = [4, 6, 8, 10, 12, 14, 16, 18, 20]; // Розмірність задачі
-const tau = 100; // Значення математичного сподівання
-const deltaTau = 10; // Значення напівінтервалу
+// Parameters
+const numOfStudents = [4, 6, 8, 10, 12, 14, 16, 18, 20]; // Problem size
+const tau = 100; // Mean value
+const deltaTau = 10; // Semi-interval value
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Запуск тесту та побудова діаграм
+    // Run the test and build the charts
     const data = deviationTest(numOfStudents, tau, deltaTau);
-    drawDeviationChart(data, 'deviationTest'); // Відображення діаграм
+    drawDeviationChart(data, 'deviationTest'); // Display charts
 
-    // Середні відхилення для виведення в консоль
-    let { averageDeviationsFromAnt, averageDeviationsFromGreedy } = deviationTest(numOfStudents, tau, deltaTau);
+    // Average deviations for console output
+    let { averageDeviationsFromAnt, averageDeviationsFromGreedy } = data;
 
-    console.log('Середні відхилення ЦФ для методу попарних перестановок відносно ЦФ отриманої за допомогою мурашиного алгоритму – ', averageDeviationsFromAnt);
-    console.log('Середні відхилення ЦФ для методу попарних перестановок відносно ЦФ отриманої за допомогою жадібного алгоритму – ', averageDeviationsFromGreedy);
+    console.log('Average deviations of TF for pairwise permutation method relative to TF obtained by ant algorithm – ', averageDeviationsFromAnt);
+    console.log('Average deviations of TF for pairwise permutation method relative to TF obtained by greedy algorithm – ', averageDeviationsFromGreedy);
 });
 
-// Тестова функція для розрахунку відхилень
+// Test function for calculating deviations
 function deviationTest(numOfStudents, tau, deltaTau) {
     let averageDeviationsFromAnt = [];
     let averageDeviationsFromGreedy = [];
@@ -29,58 +30,58 @@ function deviationTest(numOfStudents, tau, deltaTau) {
         let deviationsFromGreedy = [];
 
         for (let i = 0; i < 20; i++) {
-            // Згенерувати індивідуальну задачу P
+            // Generate individual problem P
             let P = generateMatrix(n, tau, deltaTau);
 
-            // Розв’язати задачу P методом попарних перестановок, де початкова задача P визначена мурашиним алгоритмом
+            // Solve problem P using pairwise permutations, where the initial problem P is defined by the ant algorithm
             let { result: antSchedule, result_func: antTF } = ant(n, P);
 
-            // Розв’язати задачу P методом попарних перестановок, де початкова задача P визначена жадібним алгоритмом
-            let { schedule: greedySchedule } = getGreedyResults(P);
+            // Solve problem P using pairwise permutations, where the initial problem P is defined by the greedy algorithm
+            let { schedule: greedySchedule, executionTimeGreedy } = getGreedyResults(P);
             let greedyTF = calculateTotalPreparationTime(P, greedySchedule);
 
-            // Вивід результатів жадібного алгоритму
-            console.log(`Розмірність задачі: ${n}, Запуск: ${i + 1}`);
-            console.log(`  Початковий розв’язок з жадібного алгоритму - Цільова функція (ЦФ): ${greedyTF}`);
-            console.log(`  Початковий розв’язок з мурашиного алгоритму - Цільова функція (ЦФ): ${antTF}`);
+            // Output results of the greedy algorithm
+            console.log(`Problem size: ${n}, Run: ${i + 1}`);
+            console.log(`  Initial solution from greedy algorithm - Target function (TF): ${greedyTF}`);
+            console.log(`  Initial solution from ant algorithm - Target function (TF): ${antTF}`);
 
-            // Розв’язати задачу P методом попарних перестановок
+            // Solve problem P using pairwise permutations
             let { bestTime: ppTimeFromAnt } = getResultsPP(P, antSchedule);
             let { bestTime: ppTimeFromGreedy } = getResultsPP(P, greedySchedule);
 
-            // Вивід результатів методу попарних перестановок
-            console.log(`  Попарні перестановки з початковим розв’язком з мурашиного алгоритму - ЦФ: ${ppTimeFromAnt}`);
-            console.log(`  Попарні перестановки з початковим розв’язком з жадібного алгоритму - ЦФ: ${ppTimeFromGreedy}`);
+            // Output results of pairwise permutation method
+            console.log(`  Pairwise permutations with initial solution from ant algorithm - TF: ${ppTimeFromAnt}`);
+            console.log(`  Pairwise permutations with initial solution from greedy algorithm - TF: ${ppTimeFromGreedy}`);
 
-            // Розрахувати відхилення ЦФ
+            // Calculate TF deviations
             let deviationFromAnt = calculateDeviation(ppTimeFromAnt, antTF);
             let deviationFromGreedy = calculateDeviation(ppTimeFromGreedy, greedyTF);
 
-            console.log(`  Відхилення ЦФ для методу попарних перестановок відносно ЦФ отриманої за допомогою мурашиного алгоритму: ${deviationFromAnt}`);
-            console.log(`  Відхилення ЦФ для методу попарних перестановок відносно ЦФ отриманої за допомогою жадібного алгоритму: ${deviationFromGreedy}`);
+            console.log(`  TF deviation for pairwise permutation method relative to TF obtained by ant algorithm: ${deviationFromAnt}`);
+            console.log(`  TF deviation for pairwise permutation method relative to TF obtained by greedy algorithm: ${deviationFromGreedy}`);
 
             deviationsFromAnt.push(deviationFromAnt);
             deviationsFromGreedy.push(deviationFromGreedy);
         }
 
-        // Визначити середнє відхилення ЦФ
+        // Determine the average TF deviation
         averageDeviationsFromAnt.push(calculateAverage(deviationsFromAnt));
         averageDeviationsFromGreedy.push(calculateAverage(deviationsFromGreedy));
     }
 
     return {
-        labels: numOfStudents, // Мітки для діаграми
+        labels: numOfStudents, // Labels for the chart
         averageDeviationsFromAnt,
         averageDeviationsFromGreedy,
     };
 }
 
-// Функція для розрахунку відхилення ЦФ
+// Function for calculating TF deviation
 function calculateDeviation(value1, value2) {
     return Math.abs(value1 - value2) / Math.min(value1, value2);
 }
 
-// Побудова діаграм
+// Build charts
 function drawDeviationChart(data, htmlElement) {
     const ctx = document.getElementById(htmlElement).getContext('2d');
 
@@ -89,18 +90,23 @@ function drawDeviationChart(data, htmlElement) {
         data: {
             labels: data.labels,
             datasets: [{
-                    label: 'Відхилення від ЦФ мурашиного алгоритму',
+                    label: 'Deviation from TF of ant algorithm',
                     data: data.averageDeviationsFromAnt,
-                    backgroundColor: 'rgb(96, 130, 182)',
+                    backgroundColor: 'rgba(96, 130, 182, 0.7)',
                     borderColor: 'rgba(70, 130, 180, 1)',
                     borderWidth: 1,
                 },
                 {
-                    label: 'Відхилення від ЦФ жадібного алгоритму',
+                    label: 'Deviation from TF of greedy algorithm',
                     data: data.averageDeviationsFromGreedy,
-                    backgroundColor: 'rgb(182, 96, 130)',
+                    backgroundColor: 'rgba(182, 96, 130, 0.7)',
                     borderColor: 'rgba(180, 70, 130, 1)',
                     borderWidth: 1,
+                    type: 'line', // Use a line chart for the pink dataset
+                    fill: false, // Disable fill for the line chart
+                    pointStyle: 'circle', // Use circles for data points
+                    pointRadius: 5, // Increase the size of data points
+                    yAxisID: 'y-axis-2', // Use a secondary y-axis
                 },
             ],
         },
@@ -112,14 +118,19 @@ function drawDeviationChart(data, htmlElement) {
                 },
                 title: {
                     display: true,
-                    text: 'Середнє відхилення ЦФ для методу попарних перестановок відносно ЦФ мурашиного та жадібного алгоритмів',
+                    text: 'Average TF deviation for pairwise permutation method relative to TF of ant and greedy algorithms',
                 },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return `Середнє відхилення: ${context.raw}`;
+                            return `Average deviation: ${context.raw}`;
                         },
                     },
+                },
+                datalabels: {
+                    display: true,
+                    align: 'top',
+                    formatter: (value, context) => value.toFixed(2),
                 },
             },
             scales: {
@@ -127,28 +138,44 @@ function drawDeviationChart(data, htmlElement) {
                     beginAtZero: false,
                     title: {
                         display: true,
-                        text: 'Кількість студентів (n)',
+                        text: 'Number of students (n)',
                     },
                 },
                 y: {
-                    beginAtZero: false,
+                    beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Середнє відхилення',
+                        text: 'Average deviation',
+                    },
+                    ticks: {
+                        min: 0,
+                        max: 1,
                     },
                 },
-            },
-            layout: {
-                backgroundColor: 'rgba(211, 211, 211, 1)',
+                'y-axis-2': {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Deviation from TF of greedy algorithm',
+                    },
+                    position: 'right',
+                    grid: {
+                        drawOnChartArea: false,
+                    },
+                    ticks: {
+                        min: 0,
+                        max: 1,
+                    },
+                },
             },
         },
     });
 }
 
-// Розрахунок середнього значення масиву
+// Calculate the average value of an array
 function calculateAverage(arr) {
     if (arr.length === 0) {
-        return 0; // Повернути 0, якщо масив пустий
+        return 0; // Return 0 if the array is empty
     }
 
     let sum = 0;

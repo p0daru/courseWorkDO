@@ -59,6 +59,11 @@ export function getGreedyResults(matrix) {
   const endTime = performance.now();
   const executionTimeGreedy = endTime - startTime;
 
+  const totalPreparationTime = calculateTotalPreparationTime(matrix, schedule);
+
+  console.log(`Greedy Schedule: ${schedule}`);
+  console.log(`Greedy TF: ${totalPreparationTime}`);
+
   return {
     schedule,
     executionTimeGreedy,
