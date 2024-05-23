@@ -1,4 +1,5 @@
-import { generateMatrix, greedySchedule, calculateTotalPreparationTime } from './greedy.js';
+import { generateMatrix } from '../../generator/taskGenerator.js';
+import { greedySchedule, calculateTotalPreparationTime } from '../greedy/greedy.js';
 
 function swapPairs(schedule, numOfStudents) {
   let newSchedule = schedule.slice();
@@ -29,8 +30,7 @@ function optimizeSchedule(matrix, initialSchedule, maxIterations) {
   let bestSchedule = schedule;
   let bestTime = calculateTotalPreparationTime(matrix, schedule);
 
-  let i = 0;
-  while (i < maxIterations) {
+  for (let i = 0; i < maxIterations; i++) {
     let newSchedule = swapPairs(schedule, schedule.length);
     let newTime = calculateTotalPreparationTime(matrix, newSchedule);
 
@@ -40,7 +40,6 @@ function optimizeSchedule(matrix, initialSchedule, maxIterations) {
     }
 
     schedule = newSchedule;
-    i++;
   }
 
   return { bestSchedule, bestTime };
@@ -58,8 +57,7 @@ export function getResultsPP(
   let bestSchedule = schedule;
   let bestTime = calculateTotalPreparationTime(matrix, schedule);
 
-  let i = 0;
-  while (i < maxIterations) {
+  for (let i = 0; i < maxIterations; i++) {
     let newSchedule = swapPairs(schedule, schedule.length);
     let newTime = calculateTotalPreparationTime(matrix, newSchedule);
 
@@ -69,7 +67,6 @@ export function getResultsPP(
     }
 
     schedule = newSchedule;
-    i++;
   }
 
   const endTime = performance.now();
