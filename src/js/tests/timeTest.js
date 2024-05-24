@@ -4,6 +4,12 @@ import { ant } from '../algorithms/ant/ant.js';
 import { calcResultsBnB } from '../algorithms/branchBound/bnbResults.js';
 import { getResultsPP } from '../algorithms/pairwisePermut/pairwisePermut.js';
 
+// export function showTTResult() {
+
+// }
+
+// showTTResult();
+
 // Input data
 const numOfStudents = [4, 6, 8, 10, 12, 14, 16, 18, 20]; // problem size
 const tau = 100; // mean value
@@ -30,7 +36,11 @@ function timeTest(numOfStudents, tau, deltaTau) {
 
     for (let j = 0; j < 20; j++) {
       // Generate lesson durations and transition matrix
-      const trainingDuration = Generator.generateLessonDuration(numOfStudents[i], tau, deltaTau);
+      const trainingDuration = Generator.generateLessonDuration(
+        numOfStudents[i],
+        tau,
+        deltaTau
+      );
       const matrix = Generator.generateMatrix(numOfStudents[i], tau, deltaTau);
 
       // Calculate algorithm executions
