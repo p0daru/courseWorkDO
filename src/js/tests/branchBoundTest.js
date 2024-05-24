@@ -1,45 +1,61 @@
 import * as results from '../algorithms/branchBound/bnbResults.js';
 import * as Generator from '../generator/taskGenerator.js';
 
-// Вхідні дані
-const numOfStudents = 8;
-const tau = 100;
-const deltaTauMassive = [10, 50];
+// Input data
+const numOfStudents = 8; // problem size
+const tau = 100; // mean value
+const deltaTauValues = [10, 50]; // semi-interval values
 
-// Обчислення ЦФ для різних ∆τ
-function testBnb(numOfStudents, tau, deltaTauMassive) {
-  let targetFunctions = [];
-  const trainingDuration = Generator.generateLessonDuration(numOfStudents);
+// Example function call
+const targetFunctions = testBnb(numOfStudents, tau, deltaTauValues);
+drawChart(deltaTauValues, targetFunctions, 'bnbTest'); // draw histograms
+// console.log(targetFunctions);
 
-  for (let i = 0; i < deltaTauMassive.length; i += 1) {
-    const matrix = Generator.generateMatrix(
-      numOfStudents,
-      tau,
-      deltaTauMassive[i]
-    );
+// Calculate the average target functions for different deltaTau values
+function testBnb(numOfStudents, tau, deltaTauValues) {
+  let averageTargetFuncs = [];
 
-    let res = results.calcResultsBnB(matrix, trainingDuration);
-    targetFunctions.push(res.totalWorkTimeBnB);
+  for (let i = 0; i < deltaTauValues.length; i += 1) {
+    // Array to store target functions for current deltaTau
+    let targetFunctions = [];
+
+    for (let j = 0; j < 20; j += 1) {
+      // Generate lesson durations and transition matrix
+      const trainingDuration = Generator.generateLessonDuration(numOfStudents);
+      const matrix = Generator.generateMatrix(
+        numOfStudents,
+        tau,
+        deltaTauValues[i]
+      );
+
+      // Calculate target function using Branch and Bound results
+      let targetFunc = results.calcResultsBnB(
+        matrix,
+        trainingDuration
+      ).totalWorkTimeBnB;
+
+      // Add target funcs to the array
+      targetFunctions.push(targetFunc);
+    }
+    // Calculate and store the average target function for the current deltaTau
+    averageTargetFuncs.push(calculateAverage(targetFunctions));
   }
 
-  return targetFunctions;
+  return averageTargetFuncs;
 }
 
-let targetFunctions = testBnb(numOfStudents, tau, deltaTauMassive);
-console.log(targetFunctions);
-
-// Вивести результати у вигляді графіка
-function drawChart(deltaTauMassive, targetFunctions, htmlElement) {
+// Draw histograms
+function drawChart(deltaTauValues, targetFunctions, htmlElement) {
   const ctx = document.getElementById(htmlElement).getContext('2d');
   new Chart(ctx, {
-    type: 'bar', // стовпчаста діаграма
+    type: 'bar', // histograms
     data: {
-      labels: deltaTauMassive,
+      labels: deltaTauValues,
       datasets: [
         {
           label: 'ЦФ vs ∆τ',
           data: targetFunctions,
-          backgroundColor: 'rgb(96, 130, 182)', // Блакитний колір для стовпців
+          backgroundColor: 'rgb(96, 130, 182)',
           borderColor: 'rgba(70, 130, 180, 1)',
           borderWidth: 0,
         },
@@ -58,7 +74,7 @@ function drawChart(deltaTauMassive, targetFunctions, htmlElement) {
         tooltip: {
           callbacks: {
             label: function (context) {
-              return `Цільова функція: ${context.raw}`;
+              return `Цільова Функція: ${context.raw}`;
             },
           },
         },
@@ -83,4 +99,35 @@ function drawChart(deltaTauMassive, targetFunctions, htmlElement) {
   });
 }
 
-drawChart(deltaTauMassive, targetFunctions, 'bnbTest');
+// Calculate the average value of an array
+function calculateAverage(arr) {
+  if (arr.length === 0) {
+    return 0; // Return 0 if the array is empty
+  }
+
+  let sum = 0;
+  for (let i = 0; i < arr.length; i++) {
+    sum += arr[i];
+  }
+
+  return sum / arr.length;
+}
+
+// Обчислення ЦФ для різних ∆τ. Один прогон
+// function testBnb(numOfStudents, tau, deltaTauValues) {
+//   let targetFunctions = [];
+//   const trainingDuration = Generator.generateLessonDuration(numOfStudents);
+
+//   for (let i = 0; i < deltaTauValues.length; i += 1) {
+//     const matrix = Generator.generateMatrix(
+//       numOfStudents,
+//       tau,
+//       deltaTauValues[i]
+//     );
+
+//     let res = results.calcResultsBnB(matrix, trainingDuration);
+//     targetFunctions.push(res.totalWorkTimeBnB);
+//   }
+
+//   return targetFunctions;
+// }
