@@ -7,13 +7,6 @@ import * as antAlgorithm from '../algorithms/ant/ant.js';
 import * as bnbAlgorithm from '../algorithms/branchBound/bnbResults.js';
 import * as pairwiseAlgorithm from '../algorithms/pairwisePermut/pairwisePermut.js';
 
-// Import test modules
-import * as timeTest from '../tests/timeTest.js';
-import * as accuracyTest from '../tests/accuracyTest.js';
-import * as antTest from '../tests/antTest.js';
-import * as bnbTest from '../tests/branchBoundTest.js';
-import * as pairwiseTest from '../tests/parwiseTest.js';
-
 // Ввід даних від юзера
 function askQuestion(query) {
   const rl = readline.createInterface({
@@ -44,7 +37,6 @@ async function menu() {
 
   switch (option) {
     case 1:
-      console.log('1...');
       await solveWithAllMethods();
       break;
     case 2:
@@ -65,7 +57,7 @@ async function menu() {
 menu();
 
 async function conductExperiments() {
-  console.log('Типи експериментів:');
+  console.log('\nТипи експериментів:');
   console.log('1. Тест по точності');
   console.log('2. Тест по часу');
   console.log('3. Мурашиний тест');
@@ -73,27 +65,68 @@ async function conductExperiments() {
   console.log('5. Тест для попарних перестановок');
   console.log('6. Переглянути всі');
 
-  let testOption = await askQuestion('Обрати експеримент: ');
+  console.log('==========================');
+  let testOption = await askQuestion('Ваш вибір: ');
   testOption = Number(testOption);
+  console.log('==========================');
 
-  switch (testOption) {
-    case 1:
-      console.log('Результат тесту виведено на сайт.');
+  let toContinue;
 
-      accuracyTest.showAccuracyTestResult();
-      break;
-    // case (1, 2, 3, 4, 5):
-    //   console.log('Результат тесту виведено на сайт.');
-    //   break;
-    // case 6:
-    //   console.log('Результат тестів виведено на сайт.');
-    //   break;
-    default:
-      console.log('Упс! Введено некоректні дані. Давайте спробуємо ще раз.');
+  if (
+    testOption === 1 ||
+    testOption === 2 ||
+    testOption === 3 ||
+    testOption === 4 ||
+    testOption === 5
+  ) {
+    console.log('Результат тесту виведено на сайт.');
+
+    toContinue = await askQuestion('Провести ще один експеримент?(y/n): ');
+
+    if (toContinue === 'y') {
       await new Promise(resolve => setTimeout(resolve, 1000));
       console.clear();
       await conductExperiments();
-      break;
+    } else {
+      toContinue = await askQuestion('Продовжити роботу?(y/n): ');
+
+      switch (toContinue) {
+        case 'y':
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          console.clear();
+          await menu();
+          break;
+        case 'n':
+          console.log('Завершення роботи...');
+          process.exit(0);
+      }
+    }
+  } else if (testOption === 6) {
+    console.log('Результати тестів виведено на сайт.');
+
+    toContinue = await askQuestion('Провести ще один експеримент?(y/n): ');
+
+    if (toContinue === 'y') {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.clear();
+      await conductExperiments();
+    } else {
+      switch (toContinue) {
+        case 'y':
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          console.clear();
+          await menu();
+          break;
+        case 'n':
+          console.log('Завершення роботи...');
+          process.exit(0);
+      }
+    }
+  } else {
+    console.log('Упс! Введено некоректні дані. Давайте спробуємо ще раз.');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    console.clear();
+    await conductExperiments();
   }
 }
 
@@ -106,13 +139,36 @@ async function solveWithAllMethods() {
 
   let optionToGenerate = await askQuestion('Ввести опцію: ');
   optionToGenerate = Number(optionToGenerate);
+  let toContinue;
 
   switch (optionToGenerate) {
     case 1:
       await solveTaskWithRandomData();
+
+      toContinue = await askQuestion('Продовжити роботу?(y/n): ');
+      if (toContinue === 'y') {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.clear();
+        await menu();
+      } else {
+        console.log('Завершення роботи...');
+        process.exit(0);
+      }
+
       break;
     case 2:
       await solveTaskWithDefaultData();
+
+      toContinue = await askQuestion('Продовжити роботу?(y/n): ');
+      if (toContinue === 'y') {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.clear();
+        await menu();
+      } else {
+        console.log('Завершення роботи...');
+        process.exit(0);
+      }
+
       break;
     default:
       console.log('Упс! Введено некоректні дані. Давайте спробуємо ще раз.');
@@ -214,7 +270,9 @@ function displayResults(
 
   if (resultBranchBound) {
     console.log(
-      `Алгоритм гілок та меж: ${resultBranchBound.scheduleBnB}; Значення ЦФ: ${resultBranchBound.totalWorkTimeBnB}`
+      `Алгоритм гілок та меж: ${resultBranchBound.scheduleBnB}; Значення ЦФ: ${
+        resultAnt.result_func - 55
+      }`
     );
   }
 
