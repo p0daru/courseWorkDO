@@ -14,12 +14,13 @@ drawChart(deltaTauValues, targetFunctions, 'bnbTest'); // draw histograms
 // Calculate the average target functions for different deltaTau values
 function testBnb(numOfStudents, tau, deltaTauValues) {
   let averageTargetFuncs = [];
+  const numOfRuns = 20;
 
   for (let i = 0; i < deltaTauValues.length; i += 1) {
-    // Array to store target functions for current deltaTau
-    let targetFunctions = [];
+    // Store target functions for current deltaTau
+    let targetFunctions = 0;
 
-    for (let j = 0; j < 20; j += 1) {
+    for (let j = 0; j < numOfRuns; j += 1) {
       // Generate lesson durations and transition matrix
       const trainingDuration = Generator.generateLessonDuration(numOfStudents);
       const matrix = Generator.generateMatrix(
@@ -34,11 +35,11 @@ function testBnb(numOfStudents, tau, deltaTauValues) {
         trainingDuration
       ).totalWorkTimeBnB;
 
-      // Add target funcs to the array
-      targetFunctions.push(targetFunc);
+      targetFunctions += targetFunc;
     }
     // Calculate and store the average target function for the current deltaTau
-    averageTargetFuncs.push(calculateAverage(targetFunctions));
+    const averageTF = targetFunctions / numOfRuns;
+    averageTargetFuncs.push(averageTF);
   }
 
   return averageTargetFuncs;
