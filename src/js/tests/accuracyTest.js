@@ -1,26 +1,54 @@
 import * as Generator from '../generator/taskGenerator.js';
-import { getGreedyResults, calculateTotalPreparationTime } from '../algorithms/greedy/greedy.js';
+import {
+  getGreedyResults,
+  calculateTotalPreparationTime,
+} from '../algorithms/greedy/greedy.js';
 import { ant } from '../algorithms/ant/ant.js';
 import { calcResultsBnB } from '../algorithms/branchBound/bnbResults.js';
 import { getResultsPP } from '../algorithms/pairwisePermut/pairwisePermut.js';
+
+// Show Results
+// export function showAccuracyTestResult() {
+
+// }
+
+// showAccuracyTestResult();
 
 // Input data
 const numOfStudents = [4, 6, 8, 10, 12, 14, 16, 18, 20]; // Problem size
 const tau = 100; // Mean value
 const deltaTau = 10; // Semi-interval value
 
+// Example function call
 document.addEventListener('DOMContentLoaded', () => {
-    // Run the test and build the charts
-    const data = accuracyTest(numOfStudents, tau, deltaTau);
-    drawAccuracyChart(data, 'accuracyTest'); // Display charts
+  // Run the test and build the charts
+  const data = accuracyTest(numOfStudents, tau, deltaTau);
+  drawAccuracyChart(data, 'accuracyTest'); // Display charts
 
-    // Average deviations for console output
-    let { averageDeviationsGreedy, averageDeviationsAnt, averageDeviationsPP, averageDeviationsBnB } = data;
+  // Average deviations for console output
+  // let {
+  //   averageDeviationsGreedy,
+  //   averageDeviationsAnt,
+  //   averageDeviationsPP,
+  //   averageDeviationsBnB,
+  // } = data;
 
-    console.log('Average deviations of TF for greedy algorithm relative to optimal TF – ', averageDeviationsGreedy);
-    console.log('Average deviations of TF for ant algorithm relative to optimal TF – ', averageDeviationsAnt);
-    console.log('Average deviations of TF for pairwise permutation algorithm relative to optimal TF – ', averageDeviationsPP);
-    console.log('Average deviations of TF for bnb algorithm relative to optimal TF – ', averageDeviationsBnB);
+  // console.log(
+  //   'Average deviations of TF for greedy algorithm relative to optimal TF – ',
+  //   averageDeviationsGreedy
+  // );
+  // console.log(
+  //   'Average deviations of TF for ant algorithm relative to optimal TF – ',
+  //   averageDeviationsAnt
+  // );
+  // console.log(
+  //   'Average deviations of TF for pairwise permutation algorithm relative to optimal TF – ',
+  //   averageDeviationsPP
+  // );
+  // console.log(
+  //   'Average deviations of TF for bnb algorithm relative to optimal TF – ',
+  //   averageDeviationsBnB
+  // );
 });
 
 // Accuracy testing
@@ -48,14 +76,21 @@ function accuracyTest(numOfStudents, tau, deltaTau) {
       let { result: antSchedule, result_func: antTF } = ant(n, P);
 
       // Solve problem P using the BnB algorithm
-      let { totalWorkTimeBnB: optimalTF, scheduleBnB, executionTimeBnB } = calcResultsBnB(P, Generator.generateLessonDuration(n));
+      let {
+        totalWorkTimeBnB: optimalTF,
+        scheduleBnB,
+        executionTimeBnB,
+      } = calcResultsBnB(P, Generator.generateLessonDuration(n));
 
       // Log the BnB results to check if they are correct
       console.log('BnB Results:', { optimalTF, scheduleBnB, executionTimeBnB });
 
       // Ensure optimalTF is correctly returned
       if (typeof optimalTF === 'undefined') {
-        console.error('optimalTF is undefined in calcResultsBnB', { scheduleBnB, executionTimeBnB });
+        console.error('optimalTF is undefined in calcResultsBnB', {
+          scheduleBnB,
+          executionTimeBnB,
+        });
         continue;
       }
 

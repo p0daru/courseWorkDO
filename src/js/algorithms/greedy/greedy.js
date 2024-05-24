@@ -60,12 +60,15 @@ export function getGreedyResults(matrix) {
   const executionTimeGreedy = endTime - startTime;
 
   const totalPreparationTime = calculateTotalPreparationTime(matrix, schedule);
+  let scheduleFormat = formatSchedule(schedule);
 
-  console.log(`Greedy Schedule: ${schedule}`);
-  console.log(`Greedy TF: ${totalPreparationTime}`);
+  // console.log(`Greedy Schedule: ${schedule}`);
+  // console.log(`Greedy TF: ${totalPreparationTime}`);
 
   return {
     schedule,
+    scheduleFormat,
+    totalPreparationTime,
     executionTimeGreedy,
   };
 }
@@ -79,6 +82,38 @@ export function calculateTotalPreparationTime(matrix, schedule) {
 }
 
 // Function to format the schedule
-export function formatSchedule(schedule) {
-  return schedule.map((student, index) => `${index % 2 === 0 ? 'b' : 'g'}${student + 1}`).join(' -> ');
+export function formatSchedule(result) {
+  let schedule = '';
+  if (result[0] % 2 === 0) {
+    for (let i = 0; i < result.length; i++) {
+      const isLastNode = i === result.length - 1;
+      const value = result[i];
+      const isEven = i % 2 === 0;
+      if (isLastNode) {
+        schedule += isEven ? `g${value + 1}` : `b${value + 1}`;
+      } else {
+        schedule += isEven ? `g${value + 1} -> ` : `b${value + 1} -> `;
+      }
+    }
+  } else {
+    for (let i = 0; i < result.length; i++) {
+      const isLastNode = i === result.length - 1;
+      const value = result[i];
+      const isEven = i % 2 === 0;
+      if (isLastNode) {
+        schedule += isEven ? `b${value + 1}` : `g${value + 1}`;
+      } else {
+        schedule += isEven ? `b${value + 1} -> ` : `g${value + 1} -> `;
+      }
+    }
+  }
+  return schedule;
 }
+
+// Function to format the schedule
+// export function formatSchedule(schedule) {
+//   return schedule
+//     .map((student, index) => `${index % 2 === 0 ? 'b' : 'g'}${student + 1}`)
+//     .join(' -> ');
+// }
+// Function to format the schedule

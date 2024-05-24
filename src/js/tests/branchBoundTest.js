@@ -1,6 +1,10 @@
 import * as results from '../algorithms/branchBound/bnbResults.js';
 import * as Generator from '../generator/taskGenerator.js';
 
+// export function showBnbTestResult() {}
+
+// showBnbTestResult();
+
 // Input data
 const numOfStudents = 8; // problem size
 const tau = 100; // mean value
