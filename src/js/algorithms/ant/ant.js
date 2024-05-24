@@ -1,31 +1,27 @@
-// Kovalenko Kateryna
 import * as Generator from '../../generator/taskGenerator.js';
 import * as results from '../ant/result_ant.js';
 
 export function ant(n, t_matrix, less_matrix = Generator.generateLessonDuration(n), alpha = 1) {
-    // Вимірювання часу виконання алгоритму
+    // Measure algorithm execution time
     const startTime = performance.now();
 
-    // Параметри алгоритму
-
+    // Algorithm parameters
     let beta = 1;
     let tay_0 = 0.7;
     let p = 0.1;
 
-    ///
     let tay_matrix = [];
     let lMax = 10;
     let result = [];
     let result_func;
-    let shedule = '';
+    let schedule = '';
 
-    //Обираємо хто буде першим в матриці хлопчик чи дівчинка
-    let gender = 'g'
+    // Choose who will be first in the matrix, boy or girl
+    let gender = 'g';
 
     let t_use = t_matrix.slice().map(row => row.slice());
 
-    // Зведення матриці переналаштувань
-
+    // Reduce matrix preparation
     function minFromRows(matrix) {
         return matrix.map(row => Math.min(...row));
     }
@@ -43,10 +39,7 @@ export function ant(n, t_matrix, less_matrix = Generator.generateLessonDuration(
         return { matrix: newMatrix, minBorder };
     }
 
-    let { matrix: newMatrixRows, minBorder: newMinBorderRows } = subEveryRow(
-        t_use,
-        0
-    );
+    let { matrix: newMatrixRows, minBorder: newMinBorderRows } = subEveryRow(t_use, 0);
 
     function minFromColumns(matrix) {
         const mins = [];
@@ -73,14 +66,11 @@ export function ant(n, t_matrix, less_matrix = Generator.generateLessonDuration(
         return { matrix: newMatrix, minBorder };
     }
 
-    let { matrix: newMatrixCols, minBorder: newMinBorderCols } = subEveryColumn(
-        t_use,
-        0
-    );
+    let { matrix: newMatrixCols, minBorder: newMinBorderCols } = subEveryColumn(t_use, 0);
 
     let min_res = newMinBorderCols + newMinBorderRows;
 
-    // Заповнення матриці ферамонів
+    // Fill pheromone matrix
     for (let i = 0; i < n; ++i) {
         tay_matrix[i] = [];
         for (let j = 0; j < n; ++j) {
@@ -92,18 +82,19 @@ export function ant(n, t_matrix, less_matrix = Generator.generateLessonDuration(
         }
     }
 
-    // Основна частина програми
+    // Main part of the program
     for (let k = 1; k <= lMax; k++) {
-        let student = Math.floor(Math.random() * n); // Довільним чином обираємо першого учня на кожній ітерації
-        // console.log("ІТЕРАЦІЯ", k)
+        let student = Math.floor(Math.random() * n); // Randomly choose the first student in each iteration
         let iteration_matrix = t_matrix.slice().map(row => row.slice());
-        let result_it = []; // змінна з результатами кожної ітерації
+        let result_it = []; // variable with results of each iteration
         let result_it_func = 0;
         let visited_array = Array.from({ length: n }, () => Array(n).fill(0));
         result_it.push(student);
+
         while (result_it.length < n) {
             for (let x = 0; x < n; x++) iteration_matrix[x][student] = Infinity;
-            // Обчислення знаменника з формули 1
+
+            // Calculate denominator from formula 1
             let formula_denominator = 0;
             let res_set = new Map();
             for (let i = 0; i < n; i++) {
@@ -130,7 +121,7 @@ export function ant(n, t_matrix, less_matrix = Generator.generateLessonDuration(
                 }
             }
 
-            let randomNumber = parseFloat(Math.random()).toFixed(4); // Генерує випадкове число від 0 до 1
+            let randomNumber = parseFloat(Math.random()).toFixed(4); // Generate a random number from 0 to 1
 
             for (let [key, value] of res_set.entries()) {
                 if (parseFloat(randomNumber) <= parseFloat(value)) {
@@ -140,7 +131,8 @@ export function ant(n, t_matrix, less_matrix = Generator.generateLessonDuration(
                 }
             }
         }
-        // Обчислення ЦФ :
+
+        // Calculate TF:
         for (let i = 0; i < result_it.length - 1; i++) {
             const currentStudent = result_it[i];
             const nextStudent = result_it[i + 1];
@@ -150,7 +142,7 @@ export function ant(n, t_matrix, less_matrix = Generator.generateLessonDuration(
         }
 
         let delta_tay = min_res / result_it_func;
-        // Оновлення матриці феромонів
+        // Update pheromone matrix
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
                 if (t_matrix[i][j] != Infinity) {
@@ -174,16 +166,14 @@ export function ant(n, t_matrix, less_matrix = Generator.generateLessonDuration(
             result_func = result_it_func;
         }
     }
-    //////
+
     const endTime = performance.now();
     const executionTime = endTime - startTime;
-    console.log('Розклад: ');
-    shedule = results.Schedule_(gender, result);
-    console.log(shedule);
-    //console.log('Розклад: ', result);
-    console.log('Значення ЦФ: ', result_func);
+    console.log('Schedule: ');
+    schedule = results.Schedule_(gender, result);
+    console.log(schedule);
+    console.log('TF: ', result_func);
     console.log('ExecutionTime: ', executionTime);
 
-
-    return { shedule, result, result_func, executionTime };
+    return { schedule, result, result_func, executionTime };
 }
