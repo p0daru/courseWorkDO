@@ -1,4 +1,4 @@
-import { generateMatrix } from '../generator/taskGenerator.js';
+import * as Generator from '../generator/taskGenerator.js'
 import { getGreedyResults, calculateTotalPreparationTime } from '../algorithms/greedy/greedy.js';
 import { getResultsPP } from '../algorithms/pairwisePermut/pairwisePermut.js';
 import { ant } from '../algorithms/ant/ant.js';
@@ -31,10 +31,10 @@ function deviationTest(numOfStudents, tau, deltaTau) {
 
         for (let i = 0; i < 20; i++) {
             // Generate individual problem P
-            let P = generateMatrix(n, tau, deltaTau);
-
+            let P = Generator.generateMatrix(n, tau, deltaTau);
+            let less_matrix = Generator.generateLessonDuration(n);
             // Solve problem P using pairwise permutations, where the initial problem P is defined by the ant algorithm
-            let { result: antSchedule, result_func: antTF } = ant(n, P);
+            let { result: antSchedule, result_func: antTF } = ant(n, P, less_matrix);
 
             // Solve problem P using pairwise permutations, where the initial problem P is defined by the greedy algorithm
             let { schedule: greedySchedule, executionTimeGreedy } = getGreedyResults(P);
