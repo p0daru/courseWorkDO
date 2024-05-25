@@ -209,7 +209,9 @@ async function solveTaskWithRandomData() {
     resultGreedy,
     resultPairwise,
     resultBranchBound,
-    durationSum
+    durationSum,
+    matrix,
+    trainingDuration
   );
 }
 
@@ -236,7 +238,9 @@ async function solveTaskWithDefaultData() {
     resultGreedy,
     resultPairwise,
     resultBranchBound,
-    durationSum
+    durationSum,
+    matrix,
+    trainingDuration
   );
 }
 
@@ -245,8 +249,16 @@ function displayResults(
   resultGreedy,
   resultPairwise,
   resultBranchBound,
-  durationSum
+  durationSum,
+  matrix,
+  trainingDuration
 ) {
+  console.log('\nМатриця переналаштувань:');
+  console.table(matrix);
+
+  console.log('\nТривалості занять:');
+  console.table(trainingDuration);
+
   console.log('\nРезультат роботи алгоритмів');
   console.log('==============================');
 
@@ -256,9 +268,7 @@ function displayResults(
 
   if (resultGreedy) {
     console.log(
-      `Жадібний алгоритм: ${resultGreedy.scheduleFormat}; Значення ЦФ: ${
-        resultGreedy.totalTF + durationSum
-      }`
+      `Жадібний алгоритм: ${resultGreedy.scheduleFormat}; Значення ЦФ: ${resultGreedy.totalTF}`
     );
   }
 
