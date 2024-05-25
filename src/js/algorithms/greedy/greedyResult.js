@@ -13,17 +13,13 @@ import {
 // Function to get the student label
 function getStudentLabel(index) {
   return index % 2 === 0
-    ? `b${Math.floor(index / 2) + 1}`
-    : `g${Math.floor(index / 2) + 1}`;
+    ? `g${Math.floor(index / 2) + 1}`
+    : `b${Math.floor(index / 2) + 1}`;
 }
 
 function findNearestNeighborWithLogging(matrix, current, visited) {
   let nearest = -1;
   let minDistance = Infinity;
-
-  // console.log(`Поточний учень: ${getStudentLabel(current)}`);
-  // console.log('Відвідано:', Array.from(visited).map(getStudentLabel));
-  // console.log('Тривалості перерв:', matrix[current]);
 
   for (let i = 0; i < matrix.length; i++) {
     if (!visited.has(i) && matrix[current][i] < minDistance) {
@@ -32,11 +28,6 @@ function findNearestNeighborWithLogging(matrix, current, visited) {
     }
   }
 
-  // console.log(
-  //   `Наступний учень: ${getStudentLabel(
-  //     nearest
-  //   )} (тривалість перерви: ${minDistance})\n`
-  // );
   return nearest;
 }
 
@@ -45,11 +36,9 @@ function greedyScheduleWithLogging(matrix) {
   let visited = new Set();
   let schedule = [];
 
-  let current = 0; // Start with the first student as a boy
+  let current = 0; // Start with the first student as a predefined student (e.g., g1)
   schedule.push(current);
   visited.add(current);
-
-  // console.log(`Перший учень: ${getStudentLabel(current)}`);
 
   while (schedule.length < numOfStudents) {
     let next = findNearestNeighborWithLogging(matrix, current, visited);
@@ -110,10 +99,6 @@ export function greedyResult(matrix, lessonDurations) {
 
 // Test Case
 // try {
-//   // const numOfStudents = 8;
-//   // const tau = 10;
-//   // const deltaTau = 5;
-
 //   const lessonDurations = getDefaultInputValues().trainingDuration;
 //   const matrix = getDefaultInputValues().matrix;
 
@@ -124,7 +109,7 @@ export function greedyResult(matrix, lessonDurations) {
 //   console.error('Помилка:', error.message);
 // }
 
-// // Test Case
+// Test Case
 // try {
 //   const numOfStudents = 8;
 //   const tau = 10;

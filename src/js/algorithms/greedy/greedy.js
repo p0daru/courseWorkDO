@@ -19,7 +19,7 @@ export function greedySchedule(matrix) {
   let visited = new Set();
   let schedule = [];
 
-  let current = Math.floor(Math.random() * numOfStudents);
+  let current = 0; // Start with the first student as a predefined student (e.g., g1)
   schedule.push(current);
   visited.add(current);
 
@@ -39,31 +39,13 @@ export function greedySchedule(matrix) {
 export function getGreedyResults(matrix) {
   const startTime = performance.now();
 
-  let numOfStudents = matrix.length;
-  let visited = new Set();
-  let schedule = [];
-
-  let current = Math.floor(Math.random() * numOfStudents);
-  schedule.push(current);
-  visited.add(current);
-
-  while (schedule.length < numOfStudents) {
-    let next = findNearestNeighbor(matrix, current, visited);
-    if (next === -1) break;
-
-    schedule.push(next);
-    visited.add(next);
-    current = next;
-  }
+  let schedule = greedySchedule(matrix);
 
   const endTime = performance.now();
   const executionTimeGreedy = endTime - startTime;
 
   const totalPreparationTime = calculateTotalPreparationTime(matrix, schedule);
-  // let scheduleFormat = formatSchedule(schedule);
   let scheduleFormat = schedule.map(getStudentLabel).join(' -> ');
-  // console.log(`Greedy Schedule: ${schedule}`);
-  // console.log(`Greedy TF: ${totalPreparationTime}`);
 
   return {
     schedule,
@@ -83,43 +65,22 @@ export function calculateTotalPreparationTime(matrix, schedule) {
 
 function getStudentLabel(index) {
   return index % 2 === 0
-    ? `b${Math.floor(index / 2) + 1}`
-    : `g${Math.floor(index / 2) + 1}`;
+    ? `g${Math.floor(index / 2) + 1}`
+    : `b${Math.floor(index / 2) + 1}`;
 }
 
 // Function to format the schedule
 export function formatSchedule(result) {
   let schedule = '';
-  if (result[0] % 2 === 0) {
-    for (let i = 0; i < result.length; i++) {
-      const isLastNode = i === result.length - 1;
-      const value = result[i];
-      const isEven = i % 2 === 0;
-      if (isLastNode) {
-        schedule += isEven ? `g${value + 1}` : `b${value + 1}`;
-      } else {
-        schedule += isEven ? `g${value + 1} -> ` : `b${value + 1} -> `;
-      }
-    }
-  } else {
-    for (let i = 0; i < result.length; i++) {
-      const isLastNode = i === result.length - 1;
-      const value = result[i];
-      const isEven = i % 2 === 0;
-      if (isLastNode) {
-        schedule += isEven ? `b${value + 1}` : `g${value + 1}`;
-      } else {
-        schedule += isEven ? `b${value + 1} -> ` : `g${value + 1} -> `;
-      }
+  for (let i = 0; i < result.length; i++) {
+    const isLastNode = i === result.length - 1;
+    const value = result[i];
+    const isEven = i % 2 === 0;
+    if (isLastNode) {
+      schedule += isEven ? `g${value + 1}` : `b${value + 1}`;
+    } else {
+      schedule += isEven ? `g${value + 1} -> ` : `b${value + 1} -> `;
     }
   }
   return schedule;
 }
-
-// Function to format the schedule
-// export function formatSchedule(schedule) {
-//   return schedule
-//     .map((student, index) => `${index % 2 === 0 ? 'b' : 'g'}${student + 1}`)
-//     .join(' -> ');
-// }
-// Function to format the schedule
