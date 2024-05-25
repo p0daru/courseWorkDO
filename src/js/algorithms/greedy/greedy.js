@@ -60,8 +60,8 @@ export function getGreedyResults(matrix) {
   const executionTimeGreedy = endTime - startTime;
 
   const totalPreparationTime = calculateTotalPreparationTime(matrix, schedule);
-  let scheduleFormat = formatSchedule(schedule);
-
+  // let scheduleFormat = formatSchedule(schedule);
+  let scheduleFormat = schedule.map(getStudentLabel).join(' -> ');
   // console.log(`Greedy Schedule: ${schedule}`);
   // console.log(`Greedy TF: ${totalPreparationTime}`);
 
@@ -79,6 +79,12 @@ export function calculateTotalPreparationTime(matrix, schedule) {
     total += matrix[schedule[i]][schedule[i + 1]];
   }
   return total;
+}
+
+function getStudentLabel(index) {
+  return index % 2 === 0
+    ? `b${Math.floor(index / 2) + 1}`
+    : `g${Math.floor(index / 2) + 1}`;
 }
 
 // Function to format the schedule

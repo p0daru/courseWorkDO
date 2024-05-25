@@ -55,14 +55,14 @@ const taskGenerator = {
   getDefaultInputValues: function () {
     // матриця переналаштувань
     let matrix = [
-      [Infinity, 15, Infinity, 20, Infinity, 5, Infinity, 10],
-      [5, Infinity, 15, Infinity, 5, Infinity, 10, Infinity],
-      [Infinity, 20, Infinity, 15, Infinity, 5, Infinity, 5],
-      [10, Infinity, 20, Infinity, 5, Infinity, 10, Infinity],
+      [Infinity, 5, Infinity, 10, Infinity, 15, Infinity, 5],
+      [30, Infinity, 15, Infinity, 5, Infinity, 10, Infinity],
+      [Infinity, 20, Infinity, 25, Infinity, 5, Infinity, 25],
+      [35, Infinity, 20, Infinity, 5, Infinity, 10, Infinity],
       [Infinity, 15, Infinity, 15, Infinity, 5, Infinity, 5],
-      [10, Infinity, 15, Infinity, 10, Infinity, 10, Infinity],
-      [Infinity, 20, Infinity, 20, Infinity, 10, Infinity, 5],
-      [5, Infinity, 15, Infinity, 5, Infinity, 5, Infinity],
+      [30, Infinity, 25, Infinity, 10, Infinity, 10, Infinity],
+      [Infinity, 20, Infinity, 25, Infinity, 10, Infinity, 5],
+      [25, Infinity, 15, Infinity, 5, Infinity, 25, Infinity],
     ];
 
     // тривалість занять
@@ -105,6 +105,11 @@ export function validateInputs(
   }
 }
 
+// Експорт функцій
+export const generateMatrix = taskGenerator.generateMatrix;
+export const generateLessonDuration = taskGenerator.generateLessonDuration;
+export const getDefaultInputValues = taskGenerator.getDefaultInputValues;
+
 // Приклад використання
 // try {
 //   const matrix = taskGenerator.generateMatrix(4, 50, 10);
@@ -115,11 +120,6 @@ export function validateInputs(
 // } catch (error) {
 //   console.error(error.message);
 // }
-
-// Експорт функцій
-export const generateMatrix = taskGenerator.generateMatrix;
-export const generateLessonDuration = taskGenerator.generateLessonDuration;
-export const getDefaultInputValues = taskGenerator.getDefaultInputValues;
 
 //===== Test case 2 ====//
 // export function generateMatrix(numOfStudents, tau, deltaTau) {
@@ -144,3 +144,14 @@ export const getDefaultInputValues = taskGenerator.getDefaultInputValues;
 
 //   return matrix;
 // }
+
+// let matrix = [
+//   [Infinity, 15, Infinity, 20, Infinity, 5, Infinity, 10],
+//   [5, Infinity, 15, Infinity, 5, Infinity, 10, Infinity],
+//   [Infinity, 20, Infinity, 15, Infinity, 5, Infinity, 5],
+//   [10, Infinity, 20, Infinity, 5, Infinity, 10, Infinity],
+//   [Infinity, 15, Infinity, 15, Infinity, 5, Infinity, 5],
+//   [10, Infinity, 15, Infinity, 10, Infinity, 10, Infinity],
+//   [Infinity, 20, Infinity, 20, Infinity, 10, Infinity, 5],
+//   [5, Infinity, 15, Infinity, 5, Infinity, 5, Infinity],
+// ];
