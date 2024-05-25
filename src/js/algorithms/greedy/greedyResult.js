@@ -3,6 +3,7 @@ import {
   generateLessonDuration,
   getDefaultInputValues,
 } from '../../generator/taskGenerator.js';
+
 import {
   greedySchedule,
   calculateTotalPreparationTime,
@@ -20,9 +21,9 @@ function findNearestNeighborWithLogging(matrix, current, visited) {
   let nearest = -1;
   let minDistance = Infinity;
 
-  console.log(`Поточний учень: ${getStudentLabel(current)}`);
-  console.log('Відвідано:', Array.from(visited).map(getStudentLabel));
-  console.log('Тривалості перерв:', matrix[current]);
+  // console.log(`Поточний учень: ${getStudentLabel(current)}`);
+  // console.log('Відвідано:', Array.from(visited).map(getStudentLabel));
+  // console.log('Тривалості перерв:', matrix[current]);
 
   for (let i = 0; i < matrix.length; i++) {
     if (!visited.has(i) && matrix[current][i] < minDistance) {
@@ -31,11 +32,11 @@ function findNearestNeighborWithLogging(matrix, current, visited) {
     }
   }
 
-  console.log(
-    `Наступний учень: ${getStudentLabel(
-      nearest
-    )} (тривалість перерви: ${minDistance})\n`
-  );
+  // console.log(
+  //   `Наступний учень: ${getStudentLabel(
+  //     nearest
+  //   )} (тривалість перерви: ${minDistance})\n`
+  // );
   return nearest;
 }
 
@@ -48,7 +49,7 @@ function greedyScheduleWithLogging(matrix) {
   schedule.push(current);
   visited.add(current);
 
-  console.log(`Перший учень: ${getStudentLabel(current)}`);
+  // console.log(`Перший учень: ${getStudentLabel(current)}`);
 
   while (schedule.length < numOfStudents) {
     let next = findNearestNeighborWithLogging(matrix, current, visited);
@@ -91,17 +92,37 @@ export function greedyConsole(numOfStudents, tau, deltaTau) {
   console.log('Час виконання жадібного алгоритму: ', executionTimeGreedy, 'ms');
 }
 
-// Test Case Default
-try {
-  const lessonDurations = getDefaultInputValues().trainingDuration;
-  const matrix = getDefaultInputValues().matrix;
+export function greedyResult(matrix, lessonDurations) {
+  const startTime = performance.now();
 
-  let greedyResults = greedyResult(matrix, lessonDurations);
-  console.log(greedyResults.scheduleFormat);
-  console.log(greedyResults.totalTF);
-} catch (error) {
-  console.error('Помилка:', error.message);
+  let schedule = greedyScheduleWithLogging(matrix);
+  const totalPreparationTime = calculateTotalPreparationTime(matrix, schedule);
+  const totalLessonDuration = lessonDurations.reduce(
+    (acc, val) => acc + val,
+    0
+  );
+  const totalTF = totalLessonDuration + totalPreparationTime;
+
+  const endTime = performance.now();
+  let scheduleFormat = schedule.map(getStudentLabel).join(' -> ');
+  return { schedule, scheduleFormat, totalTF };
 }
+
+// Test Case
+// try {
+//   // const numOfStudents = 8;
+//   // const tau = 10;
+//   // const deltaTau = 5;
+
+//   const lessonDurations = getDefaultInputValues().trainingDuration;
+//   const matrix = getDefaultInputValues().matrix;
+
+//   let greedyResults = greedyResult(matrix, lessonDurations);
+//   console.log(greedyResults.scheduleFormat);
+//   console.log(greedyResults.totalTF);
+// } catch (error) {
+//   console.error('Помилка:', error.message);
+// }
 
 // // Test Case
 // try {

@@ -2,7 +2,7 @@ import readline from 'readline';
 import * as Generator from '../generator/taskGenerator.js';
 
 // Import algorithm modules
-import * as greedyAlgorithm from '../algorithms/greedy/greedy_console.js';
+import * as greedyAlgorithm from '../algorithms/greedy/greedyResult.js';
 import * as antAlgorithm from '../algorithms/ant/ant.js';
 import * as bnbAlgorithm from '../algorithms/branchBound/bnbResults.js';
 import * as pairwiseAlgorithm from '../algorithms/pairwisePermut/pairwisePermut.js';
