@@ -1,9 +1,19 @@
-import { generateMatrix, generateLessonDuration } from '../../generator/taskGenerator.js';
-import { greedySchedule, calculateTotalPreparationTime, formatSchedule } from './greedy.js';
+import {
+  generateMatrix,
+  generateLessonDuration,
+  getDefaultInputValues,
+} from '../../generator/taskGenerator.js';
+import {
+  greedySchedule,
+  calculateTotalPreparationTime,
+  formatSchedule,
+} from './greedy.js';
 
 // Function to get the student label
 function getStudentLabel(index) {
-  return index % 2 === 0 ? `b${Math.floor(index / 2) + 1}` : `g${Math.floor(index / 2) + 1}`;
+  return index % 2 === 0
+    ? `b${Math.floor(index / 2) + 1}`
+    : `g${Math.floor(index / 2) + 1}`;
 }
 
 function findNearestNeighborWithLogging(matrix, current, visited) {
@@ -21,7 +31,11 @@ function findNearestNeighborWithLogging(matrix, current, visited) {
     }
   }
 
-  console.log(`Наступний учень: ${getStudentLabel(nearest)} (тривалість перерви: ${minDistance})\n`);
+  console.log(
+    `Наступний учень: ${getStudentLabel(
+      nearest
+    )} (тривалість перерви: ${minDistance})\n`
+  );
   return nearest;
 }
 
@@ -62,7 +76,10 @@ export function greedyConsole(numOfStudents, tau, deltaTau) {
 
   const schedule = greedyScheduleWithLogging(matrix);
   const totalPreparationTime = calculateTotalPreparationTime(matrix, schedule);
-  const totalLessonDuration = lessonDurations.reduce((acc, val) => acc + val, 0);
+  const totalLessonDuration = lessonDurations.reduce(
+    (acc, val) => acc + val,
+    0
+  );
   const totalTF = totalLessonDuration + totalPreparationTime;
 
   const endTime = performance.now();
@@ -74,13 +91,45 @@ export function greedyConsole(numOfStudents, tau, deltaTau) {
   console.log('Час виконання жадібного алгоритму: ', executionTimeGreedy, 'ms');
 }
 
+export function greedyResult(matrix, lessonDurations) {
+  const startTime = performance.now();
+
+  let schedule = greedyScheduleWithLogging(matrix);
+  const totalPreparationTime = calculateTotalPreparationTime(matrix, schedule);
+  const totalLessonDuration = lessonDurations.reduce(
+    (acc, val) => acc + val,
+    0
+  );
+  const totalTF = totalLessonDuration + totalPreparationTime;
+
+  const endTime = performance.now();
+  let scheduleFormat = schedule.map(getStudentLabel).join(' -> ');
+  return { schedule, scheduleFormat, totalTF };
+}
+
 // Test Case
 try {
-  const numOfStudents = 8;
-  const tau = 10;
-  const deltaTau = 5;
+  // const numOfStudents = 8;
+  // const tau = 10;
+  // const deltaTau = 5;
 
-  greedyConsole(numOfStudents, tau, deltaTau);
+  const lessonDurations = getDefaultInputValues().trainingDuration;
+  const matrix = getDefaultInputValues().matrix;
+
+  let greedyResults = greedyResult(matrix, lessonDurations);
+  console.log(greedyResults.scheduleFormat);
+  console.log(greedyResults.totalTF);
 } catch (error) {
   console.error('Помилка:', error.message);
 }
+
+// // Test Case
+// try {
+//   const numOfStudents = 8;
+//   const tau = 10;
+//   const deltaTau = 5;
+
+//   greedyConsole(numOfStudents, tau, deltaTau);
+// } catch (error) {
+//   console.error('Помилка:', error.message);
+// }
