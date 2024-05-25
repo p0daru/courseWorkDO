@@ -2,7 +2,7 @@ import readline from 'readline';
 import * as Generator from '../generator/taskGenerator.js';
 
 // Import algorithm modules
-import * as greedyAlgorithm from '../algorithms/greedy/greedy.js';
+import * as greedyAlgorithm from '../algorithms/greedy/greedy_console.js';
 import * as antAlgorithm from '../algorithms/ant/ant.js';
 import * as bnbAlgorithm from '../algorithms/branchBound/bnbResults.js';
 import * as pairwiseAlgorithm from '../algorithms/pairwisePermut/pairwisePermut.js';
@@ -146,6 +146,7 @@ async function solveWithAllMethods() {
       await solveTaskWithRandomData();
 
       toContinue = await askQuestion('Продовжити роботу?(y/n): ');
+
       if (toContinue === 'y') {
         await new Promise(resolve => setTimeout(resolve, 1000));
         console.clear();
@@ -160,6 +161,7 @@ async function solveWithAllMethods() {
       await solveTaskWithDefaultData();
 
       toContinue = await askQuestion('Продовжити роботу?(y/n): ');
+
       if (toContinue === 'y') {
         await new Promise(resolve => setTimeout(resolve, 1000));
         console.clear();
@@ -190,7 +192,7 @@ async function solveTaskWithRandomData() {
   const matrix = Generator.generateMatrix(numOfStudents, tau, deltaTau);
 
   const resultAnt = antAlgorithm.ant(numOfStudents, matrix, trainingDuration);
-  const resultGreedy = greedyAlgorithm.getGreedyResults(matrix);
+  const resultGreedy = greedyAlgorithm.greedyResult(matrix, trainingDuration);
   const resultPairwise = pairwiseAlgorithm.getResultsPP(
     matrix,
     resultGreedy.schedule,
@@ -216,7 +218,7 @@ async function solveTaskWithDefaultData() {
   const matrix = Generator.getDefaultInputValues().matrix;
 
   const resultAnt = antAlgorithm.ant(matrix.length, matrix, trainingDuration);
-  const resultGreedy = greedyAlgorithm.getGreedyResults(matrix);
+  const resultGreedy = greedyAlgorithm.greedyResult(matrix, trainingDuration);
   const resultPairwise = pairwiseAlgorithm.getResultsPP(
     matrix,
     resultGreedy.schedule,
@@ -255,7 +257,7 @@ function displayResults(
   if (resultGreedy) {
     console.log(
       `Жадібний алгоритм: ${resultGreedy.scheduleFormat}; Значення ЦФ: ${
-        resultGreedy.totalPreparationTime + durationSum
+        resultGreedy.totalTF + durationSum
       }`
     );
   }
